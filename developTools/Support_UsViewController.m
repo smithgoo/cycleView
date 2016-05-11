@@ -70,7 +70,7 @@
     
         UIButton *searchBtn =[UIButton buttonWithType:UIButtonTypeCustom];
         searchBtn.frame =CGRectMake(roadText.right-100, roadText.top, 160, 30);
-        [searchBtn setTitle:@"(⊙o⊙)…面试导航" forState:UIControlStateNormal];
+        [searchBtn setTitle:@"(⊙o⊙)面试导航" forState:UIControlStateNormal];
         [searchBtn setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
     [searchBtn addTarget:self action:@selector(initMapkit) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:searchBtn];
