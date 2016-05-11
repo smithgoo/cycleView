@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     
+     UITableView基本使用方法</br>
+     
+     1.首先，Controller需要实现两个delegate ，分别是UITableViewDelegate 和UITableViewDataSource</br>
+     
+     2.然后 UITableView对象的 delegate要设置为 self。</br>
+     
+     3.然后就可以实现这些delegate的一些方法拉。</br>
+     
+     （1）- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;</br>
+     
+     这个方法返回 tableview 有多少个section</br>
+     
+     //返回有多少个Sections</br>
+     - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView</br>
+     {</br>
+     return  1;</br>
+     }</br>
+     （2）- (NSInteger)tableView:(UITableView *)table numberOfRowsInSection:(NSInteger)section;</br>
+     
+     这个方法返回   对应的section有多少个元素，也就是多少行。</br>
+     
+     - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section</br>
+     {</br>
+     return  10；</br>
+     }</br>
+     （3）- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath*)indexPath;</br>
+     
+     这个方法返回指定的 row 的高度。</br>
+     
+     - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section;</br>
+     
+     这个方法返回指定的 section的header view 的高度。</br>
+     
+     - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section;</br>
+     
+     这个方法返回指定的 section的footer view 的高度。</br>
+     
+     - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath</br>
+     {</br>
+     static  NSString * showUserInfoCellIdentifier = @ "ShowUserInfoCell" ;</br>
+     UITableViewCell * cell = </br>[tableView dequeueReusableCellWithIdentifier:</br>showUserInfoCellIdentifier];</br>
+     if  (cell == nil)</br>
+     {</br>
+     // Create a cell to display an ingredient.</br>
+     cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle</br>
+     reuseIdentifier:showUserInfoCellIdentifier]</br>
+     autorelease];</br>
+     }</br>
+     
+     // Configure the cell.</br>
+     cell.textLabel.text=@ "签名" ;</br>
+     cell.detailTextLabel.text = [NSString stringWithCString:userInfo.user_signature.c_str() encoding:NSUTF8StringEncoding];</br>
+     }</br>
+     （5）- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section</br>
+     
+     返回指定的 section 的header的高度</br>
+     
+     - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section</br>
+     {</br>
+     if  (section ==0)</br>
+     return  80.0f;</br>
+     else</br>
+     return  30.0f;</br>
+     }</br>
+     （6）- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+     </br>
+     返回指定的section 的 header  的 title，如果这个section header  有返回view，那么title就不起作用了。</br>
+     
+     - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section</br>
+     {</br>
+     if  (tableView == tableView_)</br>
+     {</br>
+     if  (section == 0)</br>
+     {</br>
+     return  @ "title 1" ;</br>
+     }</br>
+     else   if  (section == 1)</br>
+     {</br>
+     return  @ "title 2" ;</br>
+     }</br>
+     else</br>
+     {</br>
+     return  nil;</br>
+     }</br>
+     }</br>
+     else</br>
+     {</br>
+     return  nil;</br>
+     }</br>
+     }</br>
+     （7） - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section</br>
+     
+     返回指定的 section header 的view，如果没有，这个函数可以不返回view</br>
+     
+     - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section</br>
+     {</br>
+     if  (section == 0)</br>
+     {</br>
+     
+     UIView* header = [[[NSBundle mainBundle] loadNibNamed: @ "SettingHeaderView"</br>
+     owner: self</br>
+     options: nil] lastObject];</br>
+     
+     else</br>
+     {</br>
+     return  nil;</br>
+     }</br>
+     }</br>
+     (8)  - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath</br>
+     
+     当用户选中某个行的cell的时候，回调用这个。但是首先，必须设置tableview的一个属性为可以select 才行。</br>
+     
+     TableView.allowsSelection=YES;</br>
+     cell.selectionStyle=UITableViewCellSelectionStyleBlue;</br>
+     如果不希望响应select，那么就可以用下面的代码设置属性：</br>
+     
+     TableView.allowsSelection=NO;</br>
+     下面是响应select 点击函数，根据哪个section，哪个row 自己做出响应就好啦。</br>
+     
+     - ( void )tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath</br>
+     {</br>
+     if  (indexPath.section == 1)</br>
+     {</br>
+     return ;</br>
+     }</br>
+     else   if (indexPath.section==0)</br>
+     {</br>
+     switch  (indexPath.row)</br>
+     {</br>
+     //聊天</br>
+     case  0:</br>
+     {</br>
+     [self onTalkToFriendBtn];</br>
+     }</br>
+     break ;</br>
+     
+     default :</br>
+     break ;</br>
+     }</br>
+     }</br>
+     else</br>
+     {</br>
+     return  ;</br>
+     }</br>
+     
+     }</br>
+     如何让cell 能够响应 select，但是选中后的颜色又不发生改变呢，那么就设置</br>
+     
+     cell.selectionStyle = UITableViewCellSelectionStyleNone;</br>
+     
+     - (UITableViewCell *)tableView:(UITableView *)tableView</br> cellForRowAtIndexPath:(NSIndexPath *)indexPath</br>
+     ｛</br>
+     //cell被选中后的颜色不变</br>
+     cell.selectionStyle = UITableViewCellSelectionStyleNone;</br>
+     ｝</br>
+     （9）如何设置tableview  每行之间的分割线</br>
+     
+     self.tableView.separatorStyle=</br>UITableViewCellSeparatorStyleSingleLine;</br>
+     如果不需要分割线，那么就设置属性为 UITableViewCellSeparatorStyleNone  即可。</br>
+     
+     （10）如何设置 tableview cell的背景颜色</br>
+     
+     - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath</br>
+     ｛</br>
+     //设置背景颜色</br>
+     cell.contentView.backgroundColor=[UIColor colorWithRed:0.957 green:0.957 blue:0.957 alpha:1];</br>
+     ｝</br>
+     （11） - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath</br>
+     
+     这个函数响应，用户点击cell 右边的 箭头（如果有的话）</br>
+     
+     （12）如何设置tableview 可以被编辑</br>
+     
+     首先要进入编辑模式：</br>
+     
+     [TableView setEditing:YES animated:YES];</br>
+     如果要退出编辑模式，肯定就是设置为NO</br>
+     
+     - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath</br>
+     
+     返回当前cell  要执行的是哪种编辑，下面的代码是返回删除模式</br>
+     
+     - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath  </br>
+     {  </br>
+     return  UITableViewCellEditingStyleDelete;  </br>
+     }  </br>
+     -(void) tableView:(UITableView *)aTableView</br>
+     
+     commitEditingStyle:(UITableViewCellEditingStyle) editingStyle</br>
+     
+     forRowAtIndexPath:(NSIndexPath *)indexPath</br>
+     
+     通知告诉用户编辑了 哪个cell，对应上面的代码，我们在这个函数里面执行删除cell的操作。</br>
+     
+     -( void ) tableView:(UITableView *)aTableView  </br>
+     commitEditingStyle:(UITableViewCellEditingStyle) editingStyle  </br>
+     forRowAtIndexPath:(NSIndexPath *)indexPath  </br>
+     ｛  </br>
+     [chatArray removeObjectAtIndex:indexPath.row];  </br>
+     [chatTableView reloadData];  </br>
+     ｝  </br>
+     （13）如何获得 某一行的CELL对象</br>
+     
+     - (UITableViewCell *)cellForRowAtIndexPath:(NSIndexPath *)indexPath;</br>
+
+
+<td><font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

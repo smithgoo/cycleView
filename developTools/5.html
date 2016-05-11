@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     To enforce the ability of an object to hide its data, the compiler limits the scope of instance variables—that is, limits their visibility within the program.</br>
+     为了强制一个对象隐藏其数据，编译器限制实例变量范围以限制其在程序中的可见性。</br>
+     But to provide flexibility, it also lets you explicitly set the scope at four levels. Each level is marked by a compilerdirective:</br>
+     但是为了提供灵活性，苹果也让开发者显式设置范围（四选一）</br>
+     @private</br>
+     The instance variable is accessible only within the class that declares it.</br>
+     实例变量只能被声明它的类访问。</br>
+     @protected</br>
+     The instance variable is accessible within the class that declares it and within classes that inherit it. All instancevariables without an explicit scope directive have @protected scope.</br>
+     实例变量能被声明它的类和子类访问，所有没有显式制定范围的实例变量都是@protected的。</br>
+     @public</br>
+     The instance variable is accessibleeverywhere.</br>
+     实例变量可以被在任何地方访问。</br>
+     @package</br>
+     Using the modern runtime, an @package instance variable has @public scope inside the executable image that implements the class, but acts like @private outside.</br>
+     使用runtime modern，一个@package实例变量在实现这个类的可执行文件镜像中实际上是@public的，但是在外面就是@private(runtime请参考苹果文档Runtime Programming Guide)。</br>
+     The @package scope for Objective-C instance variables is analogous to private_extern for C variables and functions. Anycode outside the class implementation’s image that tries to use the instancevariable gets a link error.</br>
+     Objective-C中的@package与C语言中变量和函数的private_extern类似。任何在实现类的镜像之外的代码想使用这个实例变量都会引发link error。</br>
+     This scope is most useful for instance variables in framework classes, where @private may be too restrictive but@protected or @public too permissive.</br>
+     这个类型最常用于框架类的实例变量，使用@private太限制，使用@protected或者@public又太开放。</br>
+<td><font align="center" color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

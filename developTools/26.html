@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     1. 通过UITextFiledDelegate，来释放第一响应者 </br>（resignFirstResponder）； 这种通过delegate释放键盘的代码如下：</br>
+     - (BOOL)textFieldShouldReturn:(UITextField *)textField {</br>
+     
+     [textField resignFirstResponder];</br>
+     
+     return YES;</br>
+     
+     }</br>
+     
+     以下3种方法是通过 响应事件来处理的：</br>
+     2. 通过 Done键的 DidonExit method，来 resignFirstResponder；</br>
+     
+     3.  点击编辑框的背景图，让键盘消失。 方法： 将背景view 设为：</br> UIControll。 UIView本身不能响应事件，而UIcontroll 是可以响应事件的。</br> UIControll 继承于 UIView；  通过调用 UIControll的 Touch Down 事件，让键盘消失；</br>
+     
+     4. 放置一个 UIButton ，将这个UIButton 布满全屏，</br>当点击非编辑区域时，其实就是点击这个巨型的Button。</br> 在这个button 事件中， resignFirstResponder 即可。</br>
+     
+     - (IBAction)backgroundTap:(id)sender {</br>
+     
+     [self.nameTextField resignFirstResponder];</br>
+     
+     [self.passwordTextField resignFirstResponder];</br>
+     
+     }</br>
+     
+     说明： 这个method 模拟了用户的两种行为：</br>
+     
+     1. 点击keyboard上的 done 键 ，让键盘消失；</br>
+     
+     2. 点击 编辑框以外的区域， 让键盘消失。</br>
+     
+     
+     
+     特别说明一点：  通过布满全屏的Button ，这种方法要求：</br> 这个巨型的Button 一定要放在最底层。 否则的话，</br>编辑框将无法接受输入的事件。</br>
+     
+     
+     
+     方案点评：</br>
+     
+     UITextFieldDelegate 和 UIControll 方案，处理键盘消失问题，</br>这是一种大智慧。  而巨型 Button  和 didOnExit 方法，</br>虽然也能用，但从软件编程思想上看，只能算是一种小聪明罢了。</br>
+     
+     
+     
+     小结：</br>
+     
+     只要有输入框存在，就得处理如何让键盘消失的问题。 </br>当然，你可以仅仅处理 点击“done”按钮，来让键盘消失。</br>  但为了让用户有更好的体验， 需要同时处理 非编辑框的区域的事件响应。</br>
+     
+     
+     注册监听键盘事件的通知</br>
+     复制代码</br>
+     [[NSNotificationCenter defaultCenter] addObserver:self</br>
+     selector:@selector(keyboardWillShow:)</br>
+     name:UIKeyboardWillShowNotification</br>
+     object:nil];</br>
+     
+     [[NSNotificationCenter defaultCenter] addObserver:self</br>
+     selector:@selector(keyboardShow:)</br>
+     name:UIKeyboardDidShowNotification</br>
+     object:nil];</br>
+     
+     [[NSNotificationCenter defaultCenter] addObserver:self</br>
+     selector:@selector(keyboardWillHide:)</br>
+     name:UIKeyboardWillHideNotification</br>
+     object:nil];</br>
+     
+     [[NSNotificationCenter defaultCenter] addObserver:self</br>
+     selector:@selector(keyboardHide:)</br>
+     name:UIKeyboardDidHideNotification</br>
+     object:nil];</br>
+     复制代码</br>
+     在键盘将要出现和隐藏的回调中，加入动画。</br>
+     复制代码</br>
+     - (void)keyboardWillShow:(NSNotification *)notif {</br>
+     if (self.hidden == YES) {</br>
+     return;</br>
+     }</br>
+     
+     CGRect rect = [[notif.userInfo objectForKey:</br>UIKeyboardFrameEndUserInfoKey] CGRectValue];</br>
+     CGFloat y = rect.origin.y;</br>
+     [UIView beginAnimations:nil context:nil];</br>
+     [UIView setAnimationDuration:0.25];</br>
+     NSArray *subviews = [self subviews];</br>
+     for (UIView *sub in subviews) {</br>
+     
+     CGFloat maxY = CGRectGetMaxY(sub.frame);</br>
+     if (maxY > y - 2) {</br>
+     sub.center = CGPointMake(CGRectGetWidth(self.frame)/2.0,</br> sub.center.y - maxY + y - 2);</br>
+     }</br>
+     }</br>
+     [UIView commitAnimations];</br>
+     }</br>
+     
+     - (void)keyboardShow:(NSNotification *)notif {</br>
+     if (self.hidden == YES) {</br>
+     return;</br>
+     }</br>
+     }</br>
+     
+     - (void)keyboardWillHide:(NSNotification *)notif {</br>
+     if (self.hidden == YES) {</br>
+     return;</br>
+     }</br>
+     [UIView beginAnimations:nil context:nil];</br>
+     [UIView setAnimationDuration:0.25];</br>
+     NSArray *subviews = [self subviews];</br>
+     for (UIView *sub in subviews) {</br>
+     if (sub.center.y < CGRectGetHeight(self.frame)/2.0) {</br>
+         sub.center = CGPointMake(CGRectGetWidth(self.frame)/2.0, </br>CGRectGetHeight(self.frame)/2.0);</br>
+         }</br>
+         }</br>
+         [UIView commitAnimations];</br>
+         }</br>
+         
+         - (void)keyboardHide:(NSNotification *)notif {</br>
+         if (self.hidden == YES) {</br>
+         return;</br>
+         }</br>
+         }</br>
+     
+     
+     
+<td><font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

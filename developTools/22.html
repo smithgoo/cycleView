@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     如果想调用某个类的某个方法可以写成这样,这个方法来自NSObject类</br>
+     
+     C代码  收藏代码</br>
+     performSelector:</br>
+     performSelector:withObject:</br>
+     performSelector:withObject:withObject:</br>
+     实际调用</br>
+     
+     C代码  收藏代码</br>
+     [self performSelector:@selector(displayViews) withObject:nil afterDelay:1.0f];</br>
+     有三个方法分别是</br>
+     
+     C代码  收藏代码</br>
+     //父视图</br>
+     [self.view superview]</br>
+     //所有子视图</br>
+     [self.view subviews]</br>
+     //自身的window</br>
+     self.view.window</br>
+     循环一个视图下面所有视图的方法</br>
+     
+     C代码  收藏代码</br>
+     NSArray *allSubviews(UIView *aView)</br>
+     {</br>
+     NSArray *results = [aView subviews];</br>
+     for (UIView *eachView in [aView subviews])</br>
+     {</br>
+     NSArray *riz = allSubviews(eachView);</br>
+     if (riz) {</br>
+     results = [results arrayByAddingObjectsFromArray:riz];</br>
+     }</br>
+     }</br>
+     return results;</br>
+     }</br>
+     循环返回一个APPLICATION里面所有的VIEW</br>
+     
+     C代码  收藏代码</br>
+     // Return all views throughout the application</br>
+     NSArray *allApplicationViews()</br>
+     {</br>
+     NSArray *results = [[UIApplication sharedApplication] windows];</br>
+     for (UIWindow *window in [[UIApplication sharedApplication] windows])</br>
+     {</br>
+     NSArray *riz = allSubviews(window);</br>
+     if (riz) results = [results arrayByAddingObjectsFromArray: riz];</br>
+     }</br>
+     return results;</br>
+     }</br>
+     
+     找出所有的父视图</br>
+     
+     C代码  收藏代码</br>
+     // Return an array of parent views from the window down to the view</br>
+     NSArray *pathToView(UIView *aView)</br>
+     {</br>
+     NSMutableArray *array = [NSMutableArray arrayWithObject:aView];</br>
+     UIView *view = aView;</br>
+     UIWindow *window = aView.window;</br>
+     while (view != window)</br>
+     {</br>
+     view = [view superview];</br>
+     [array insertObject:view atIndex:0];</br>
+     }</br>
+     return array;</br>
+     }</br>
+     UIView提供了大量管理视图的方法</br>
+     
+     C代码  收藏代码</br>
+     //加一个视图到一个视图里面</br>
+     addSubview:</br>
+     //将一个视图移到前面</br>
+     bringSubviewToFront:</br>
+     //将一个视图推送到背后</br>
+     sendSubviewToBack:</br>
+     //把视图移除</br>
+     removeFromSuperview</br>
+     //插入视图 并指定索引</br>
+     insertSubview:atIndex:</br>
+     //插入视图在某个视图之上</br>
+     insertSubview:aboveSubview:</br>
+     //插入视图在某个视图之下</br>
+     insertSubview:belowSubview:</br>
+     //交换两个位置索引的视图</br>
+     exchangeSubviewAtIndex:withSubviewAtIndex:</br>
+     视图回调</br>
+     
+     C代码  收藏代码</br>
+     //当加入视图完成后调用</br>
+     (void)didAddSubview:(UIView *)subview</br>
+     //当视图移动完成后调用</br>
+     (void)didMoveToSuperview</br>
+     //当视图移动到新的WINDOW后调用</br>
+     (void)didMoveToWindow</br>
+     //在删除视图之后调用</br>
+     (void)willRemoveSubview:(UIView *)subview</br>
+     //当移动视图之前调用</br>
+     (void)didMoveToSuperview:(UIView *)subview</br>
+     //当视图移动到WINDOW之前调用</br>
+     (void)didMoveToWindow</br>
+     给UIView设置标记和检索视图</br>
+     
+     C代码  收藏代码</br>
+     myview.tag = 1001;</br>
+     [self.view viewWithTag:1001];</br>
+     (UILable *)[self.view.window viewWithTag:1001];</br>
+     视图的几何特征</br>
+     
+     C代码  收藏代码</br>
+     //框架</br>
+     struct CGPoint {</br>
+     CGFloat x;</br>
+     CGFloat y;</br>
+     };</br>
+     typedef struct CGPoint CGPoint;</br>
+     
+     /* Sizes. */</br>
+     
+     struct CGSize {</br>
+     CGFloat width;</br>
+     CGFloat height;</br>
+     };</br>
+     typedef struct CGSize CGSize;</br>
+     
+     struct CGRect {</br>
+     CGPoint origin;</br>
+     CGSize size;</br>
+     };</br>
+     typedef struct CGRect CGRect;</br>
+     
+     
+     
+     CGRect rect = CGRectMake(0,0,320,480);</br>
+     UIView *view = [[UIView allow]initWithFrame:rect];
+     </br>
+     //将String转成CGPoint 如 @”{3.0,2.5}”    {x,y}</br>
+     CGPoint CGPointFromString (</br>
+     NSString *string</br>
+     );</br>
+     
+     //将String转成CGRect  @”{{3,2},{4,5}}”  {{x,y},{w, h}}</br>
+     CGRect CGRectFromString (</br>
+     NSString *string</br>
+     );</br>
+     
+     //将String转成CGSize @”{3.0,2.5}” {w, h}</br>
+     CGSize CGSizeFromString (</br>
+     NSString *string</br>
+     );</br>
+     
+     //CGPoint转成NSString</br>
+     NSString * NSStringFromCGPoint (</br>
+     CGPoint point</br>
+     );
+     </br>
+     //CGRect转成NSString</br>
+     NSString * NSStringFromCGRect (</br>
+     CGRect rect</br>
+     );</br>
+     
+     //CGSize转成NSString</br>
+     NSString * NSStringFromCGSize (</br>
+     CGSize size</br>
+     );</br>
+     
+     //对一个CGRect进行修改 以这个的中心来修改 正数表示更小(缩小) 负数表示更大(放大)</br>
+     CGRect CGRectInset (</br>
+     CGRect rect,</br>
+     CGFloat dx,</br>
+     CGFloat dy</br>
+     );</br>
+     
+     //判断两个矩形是否相交</br>
+     bool CGRectIntersectsRect (</br>
+     CGRect rect1,</br>
+     CGRect rect2</br>
+     );</br>
+     
+     //初始为0的</br>
+     const CGPoint CGPointZero;</br>
+     const CGRect CGRectZero;</br>
+     const CGSize CGSizeZero;</br>
+     
+     //创建CGPoint</br>
+     CGPoint CGPointMake (</br>
+     CGFloat x,</br>
+     CGFloat y</br>
+     );</br>
+     //创建CGRect</br>
+     CGRect CGRectMake (</br>
+     CGFloat x,</br>
+     CGFloat y,</br>
+     CGFloat width,</br>
+     CGFloat height</br>
+     );</br>
+     //创建CGSize</br>
+     CGSize CGSizeMake (</br>
+     CGFloat width,</br>
+     CGFloat height</br>
+     );</br>
+     仿射变换</br>
+     
+     C代码  收藏代码</br>
+     CGAffineTransform form = CGAffineTransformMakeRotation(PI);</br>
+     myview.transform = form;</br>
+     如想复原</br>
+     
+     C代码  收藏代码</br>
+     myview.transform = CGAffineTransformIdentity;</br>
+     直接设置视图的中心
+     </br>
+     C代码  收藏代码</br>
+     myview.center = CGPointMake(100,200);</br>
+     中心</br>
+     
+     C代码  收藏代码</br>
+     CGRectGetMinX</br>
+     CGRectGetMinY</br>
+     //X的中间值</br>
+     CGRectGetMidX</br>
+     //Y的中间值</br>
+     CGRectGetMidY</br>
+     CGRectGetMaxX</br>
+     CGRectGetMaxY</br>
+     定时器</br>
+     
+     C代码  收藏代码</br>
+     NSTime *timer =</br> [NSTimer scheduledTimerWithTimeInterval:0.1f target:self selector:</br>@selector(move:) userInfo:nil repeats:YES];</br>
+     定义视图边界</br>
+     C代码  收藏代码</br>
+     typedef struct UIEdgeInsets {</br>
+     CGFloat top, left, bottom, right;  </br>// specify amount to inset (positive) for each of the edges. values can be negative to 'outset'</br>
+     } UIEdgeInsets;</br>
+     //eg</br>
+     UIEdgeInsets insets = UIEdgeInsetsMake(5, 5, 5, 5);</br>
+     CGRect innerRect = UIEdgeInsetsInsetRect([aView bounds], insets);</br>
+     CGRect subRect = CGRectInset(innerRect, self.frame.size.width / 2.0f, </br>self.frame.size.height / 2.0f);</br>
+     仿射变换补充</br>
+     //创建CGAffineTransform</br>
+     C代码  收藏代码</br>
+     //angle 在0-2*PI之间比较好  旋转</br>
+     CGAffineTransform transform = CGAffineTransformMakeRotation(angle);</br>
+     //缩放</br>
+     CGAffineTransform transform = CGAffineTransformMakeScale(0.5f,0.5f);</br>
+     //改变位置的</br>
+     CGAffineTransform transform = CGAffineTransformMakeTranslation(50,60);</br>
+     
+     //修改CGAffineTransform</br>
+     //修改 缩放</br>
+     CGAffineTransform scaled = CGAffineTransformScale(transform, degree, degree);</br>
+     //修改 位置</br>
+     CGAffineTransform transform = CGAffineTransformTranslate(</br>
+     CGAffineTransform t,</br>
+     CGFloat tx,</br>
+     CGFloat ty</br>
+     );</br>
+     
+     //修改角度</br>
+     CGAffineTransform transform = CGAffineTransformRotate (</br>
+     CGAffineTransform t,</br>
+     CGFloat angle</br>
+     );</br>
+     //最后设置到VIEW</br>
+     [self.view setTransform:scaled];</br>
+     
+     建立UIView动画块</br>
+     //首先建立CGContextRef</br>
+     C代码  收藏代码</br>
+     CGContextRef context = UIGraphicsGetCurrentContext();</br>
+     //标记动画开始</br>
+     [UIView beginAnimations:nil context:context];</br>
+     //定义动画加速或减速的方式</br>
+     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];</br>
+     //定义动画的时长 1秒</br>
+     [UIView setAnimationDuration:1.0];</br>
+     //中间处理 位置变化，大小变化，旋转，等等的</br>
+     [[self.view viewWithTag:999] setAlpha:1.0f];</br>
+     //标志动画块结束</br>
+     [UIView commitAnimations];</br>
+     //还可以设置回调</br>
+     [UIView setAnimationDelegate:self];</br>
+     //设置回调调用的方法</br>
+     [UIView setAnimationDidStopSelector:</br>@selector(animationFinished:)];</br>
+     视图翻转</br>
+     
+     C代码  收藏代码</br>
+     UIView *whiteBackdrop = [self.view viewWithTag:100];</br>
+     // Choose left or right flip 选择左或右翻转</br>
+     if ([(UISegmentedControl *)self.navigationItem.titleView selectedSegmentIndex]){</br>
+     [UIView setAnimationTransition: UIViewAnimationTransitionFlipFromLeft </br>forView:whiteBackdrop cache:YES];</br>
+     }else{</br>
+     [UIView setAnimationTransition: UIViewAnimationTransitionFlipFromRight </br>forView:whiteBackdrop cache:YES];</br>
+     }</br>
+     NSInteger purple = [[whiteBackdrop subviews] indexOfObject:[whiteBackdrop viewWithTag:999]];</br>
+     NSInteger maroon = [[whiteBackdrop subviews] indexOfObject:[whiteBackdrop viewWithTag:998]];</br>
+     //交换视图</br>
+     [whiteBackdrop exchangeSubviewAtIndex:purple withSubviewAtIndex:maroon];</br>
+     
+     //还有上翻和下翻两种 如下</br>
+     typedef enum {</br>
+     //没有任何效果</br>
+     UIViewAnimationTransitionNone,</br>
+     UIViewAnimationTransitionFlipFromLeft,</br>
+     UIViewAnimationTransitionFlipFromRight,</br>
+     UIViewAnimationTransitionCurlUp,</br>
+     UIViewAnimationTransitionCurlDown,</br>
+     } UIViewAnimationTransition;</br>
+     使用QuartzCore做动画</br>
+     
+     C代码  收藏代码</br>
+     //创建CATransition</br>
+     CATransition *animation = [CATransition animation];</br>
+     //设置代理</br>
+     animation.delegate = self;</br>
+     //设置动画过渡的时间</br>
+     animation.duration = 4.0f;</br>
+     //定义动画加速或减速的方式</br>
+     animation.timingFunction = UIViewAnimationCurveEaseInOut;</br>
+     //animation.type 表示设置过渡的种类 如 Fade,MoveIn,Push,Reveal</br>
+     switch ([(UISegmentedControl *)self.navigationItem.titleView selectedSegmentIndex]) {</br>
+     case 0:</br>
+     animation.type = kCATransitionFade;</br>
+     break;</br>
+     case 1:</br>
+     animation.type = kCATransitionMoveIn;</br>
+     break;</br>
+     case 2:</br>
+     animation.type = kCATransitionPush;</br>
+     break;</br>
+     case 3:</br>
+     animation.type = kCATransitionReveal;</br>
+     default:</br>
+     break;</br>
+     }</br>
+     //设置渐变的方向，上下左右</br>
+     if (isLeft)</br>
+     animation.subtype = kCATransitionFromRight;</br>
+     else</br>
+     animation.subtype = kCATransitionFromLeft;</br>
+     
+     // Perform the animation</br>
+     UIView *whitebg = [self.view viewWithTag:10];</br>
+     NSInteger purple = [[whitebg subviews] indexOfObject:[whitebg viewWithTag:99]];</br>
+     NSInteger white = [[whitebg subviews] indexOfObject:[whitebg viewWithTag:100]];</br>
+     [whitebg exchangeSubviewAtIndex:purple withSubviewAtIndex:white];</br>
+     [[whitebg layer] addAnimation:animation forKey:@"animation"];</br>
+     
+     animation.type还可以用以下的赋值</br>
+     
+     C代码  收藏代码</br>
+     switch (theButton.tag) {</br>
+     case 0:</br>
+     animation.type = @"cube";</br>
+     break;</br>
+     case 1:</br>
+     animation.type = @"suckEffect";</br>
+     break;</br>
+     case 2:</br>
+     animation.type = @"oglFlip";</br>
+     break;</br>
+     case 3:</br>
+     animation.type = @"rippleEffect";</br>
+     break;</br>
+     case 4:</br>
+     animation.type = @"pageCurl";</br>
+     break;</br>
+     case 5:</br>
+     animation.type = @"pageUnCurl"; </br>
+     break;    </br>
+     case 6:    </br>
+     animation.type = @"cameraIrisHollowOpen "; </br>
+     break;    </br>
+     case 7:    </br>
+     animation.type = @"cameraIrisHollowClose ";    </br>
+     break;    </br>
+     default:    </br>
+     break;    </br>
+     }    </br>
+    
+     
+     C代码  收藏代码</br>
+     [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:1.0f]];  </br>
+     
+     一个简单的通过图片做的动画</br>
+     
+     C代码  收藏代码</br>
+     // Load butterfly images  </br>
+     NSMutableArray *bflies = [NSMutableArray array]; </br>
+     for (int i = 1; i <= 17; i++){  </br>
+         [bflies addObject:[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] </br>pathForResource:[NSString stringWithFormat:@"bf_%d", i] ofType:@"png"]]]; </br>
+         }  </br>
+         UIImageView *butterflyView = [[UIImageView alloc] initWithFrame:CGRectMake(40.0f, 300.0f, 60.0f, 60.0f)];  </br>
+         butterflyView.tag = 300;  </br>
+         //设置动画的图片  </br>
+         butterflyView.animationImages = bflies;  </br>
+         //设置时间  </br>
+         butterflyView.animationDuration = 0.75f;  </br>
+         [self.view addSubview:butterflyView];</br>
+         //开始动画  </br>
+         [butterflyView startAnimating];  </br>
+         [butterflyView release];</br>
+<td><font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

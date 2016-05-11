@@ -1,0 +1,97 @@
+//
+//  Pretreatment.pch
+//  developTools
+//
+//  Created by Kpeng on 15/10/20.
+//  Copyright © 2015年 Kpeng. All rights reserved.
+//
+
+#ifndef Pretreatment_pch
+#define Pretreatment_pch
+#define K_CreateObjectInit(NSObject,object)\
+NSObject *object = [[NSObject alloc] init];
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+#import "CommentTools.h"
+#define screenWidth  self.view.bounds.size.width
+#define screenHeight  self.view.bounds.size.height
+#import "MBProgressHUD.h"
+#import "MBProgressHUD+MJ.h"
+#import "setUI.h"
+#import "SVProgressHUD.h"
+#import "UIImageView+WebCache.h"
+#import "AFNetworking.h"
+#import "CCLocationManager.h"
+#import "ZYAnimationLayer.h"
+
+
+#define UMengKey @"5637116ce0f55a3f340029fe"
+#define shareKey @"bc97ae113590"
+//微信
+#define KWechat_key @"wx85e6fb988997f438"
+#define KWechat_secret @"d4624c36b6795d1d99dcf0547af5443d"
+//百度API
+#define BAIDU_Api @"29ccc26ef8dd35f44a443cfc1f0f24e8"
+
+#define BAIDU_ComUrl @"http://apis.baidu.com/xiaota/bus_lines/buses_lines"
+//QQ
+//#define   QQAPPID    @"1104951304"
+//#define kQQAppkey @"QQ41D939A7"
+
+//#define kQQAppkey @"QQ41DC3808"
+#define   QQAPPKEY  @"h2mM8Tarzs2oVjj6"
+
+#import "YLGIFImage.h"
+#import "YLImageView.h"
+
+//导航条高度
+#define NavigationBar_HEIGHT 44.0f
+
+#define IS_IPHONE4 (([[UIScreen mainScreen] bounds].size.height == 480) ? YES : NO)
+
+#define IS_IPHONE5 (([[UIScreen mainScreen] bounds].size.height == 568) ? YES : NO)
+
+#define IS_IPhone6 (667 == [[UIScreen mainScreen] bounds].size.height ? YES : NO)
+
+#define IS_IPhone6plus (736 == [[UIScreen mainScreen] bounds].size.height ? YES : NO)
+
+//屏幕宽度
+#define SCREEN_WIDTH ([UIScreen mainScreen].bounds.size.width)
+
+//屏幕高度
+#define SCREEN_HEIGHT ([UIScreen mainScreen].bounds.size.height)
+
+//iOS版本
+#define IOS_VERSION [[[UIDevice currentDevice] systemVersion] floatValue]
+
+//当前系统版本
+#define CurrentSystemVersion ([[UIDevice currentDevice] systemVersion])
+
+//当前语言
+#define CurrentLanguage ([[NSLocale preferredLanguages] objectAtIndex:0])
+
+//rgb色值
+#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
+//GCD
+#define BACK(block) dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block)
+#define MAIN(block) dispatch_async(dispatch_get_main_queue(),block)
+
+
+
+#ifdef DEBUG
+#   define wpLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#else
+#   define wpLog(...)
+#endif
+
+//沙盒路径
+#define KDocumentPath [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]
+
+#define KLibraryPath [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES) firstObject]
+
+
+
+
+#endif /* Pretreatment_pch */

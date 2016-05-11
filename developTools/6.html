@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     iOS中set和get</br>
+     
+     set方法是传递一个参数没有返回  get是通过参数传递返回另一个参数</br>
+     set方法：</br>
+     
+     -(void)setName:(NSString *)name</br>
+     
+     {</br>
+     
+     　　if (_name != name)</br>
+     
+     　　{</br>
+     
+     　　　[_name release];</br>
+     
+     　　　[name retain];</br>
+     
+     _name = name;</br>
+     
+     }</br>
+     
+     }</br>
+     
+     凡是.h里面的带星号变量或者属性的都要在dealloc中release一下 [_name release]；</br>
+     
+     这样释放 或者self.xxx = nil;这种更好</br>
+     
+     get方法：</br>
+     
+     -(UILabel *)titleLable</br>
+     
+     {</br>
+     
+     　　　 if (_titleLable == nil)</br>
+     
+     　　　 {</br>
+     
+     _titleLable = [[UILabelalloc]init];</br>
+     
+     } return_titleLable;</br>
+     
+     }</br>
+     
+     在get方法中初始化，当调用的时候初始化</br>
+<td><font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     首先认识一下UICollectionView</br>
+     [objc] view plaincopy在CODE上查看代码片派生到我的代码片</br>
+     NS_CLASS_AVAILABLE_IOS(6_0) @interface UICollectionView : UIScrollView</br>
+     
+     UICollectionView 和 UICollectionViewController 类是iOS6 新引进的API，</br>用于展示集合视图，布局更加灵活，可实现多列布局，</br>用法类似于UITableView 和 UITableViewController 类。</br>
+     使用UICollectionView 必须实现</br>UICollectionViewDataSource,UICollectionViewDelegate,</br>UICollectionViewDelegateFlowLayout这三个协议。</br>
+     
+     下面给出一些常用方法，</br>
+     [objc] view plaincopy在CODE上查看代码片派生到我的代码片</br>
+     - (void)viewDidLoad</br>
+     {</br>
+     [super viewDidLoad];</br>
+     self.title = @"UICollectionView学习";</br>
+     
+     //通过Nib生成cell，然后注册 Nib的view需要继承 UICollectionViewCell</br>
+     [self.collectionView registerNib:[UINib nibWithNibName:@"SQCollectionCell" bundle:nil] </br>forCellWithReuseIdentifier:kcellIdentifier];</br>
+     
+     //注册headerView Nib的view需要继承UICollectionReusableView</br>
+     [self.collectionView registerNib:[UINib nibWithNibName:</br>@"SQSupplementaryView" bundle:nil] </br>forSupplementaryViewOfKind:UICollectionElementKindSectionHeader</br> withReuseIdentifier:kheaderIdentifier];</br>
+     //注册footerView Nib的view需要继承UICollectionReusableView</br>
+     [self.collectionView registerNib:[UINib nibWithNibName:</br>@"SQSupplementaryView" bundle:nil] </br>forSupplementaryViewOfKind:UICollectionElementKindSectionFooter </br>withReuseIdentifier:kfooterIdentifier];</br>
+     //</br>
+     self.collectionView.allowsMultipleSelection = YES;</br>//默认为NO,是否可以多选</br>
+     
+     }</br>
+     
+     - (void)didReceiveMemoryWarning</br>
+     {</br>
+     [super didReceiveMemoryWarning];</br>
+     // Dispose of any resources that can be recreated.</br>
+     }</br>
+     #pragma mark -CollectionView datasource</br>
+     //section</br>
+     - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView</br>
+     {</br>
+     return 2;</br>
+     }</br>
+     //item个数</br>
+     - (NSInteger)collectionView:(UICollectionView *)collectionView</br> numberOfItemsInSection:(NSInteger)section</br>
+     {</br>
+     return 6;</br>
+     
+     }</br>
+     
+     // The cell that is returned must be retrieved from a call to -</br>dequeueReusableCellWithReuseIdentifier:forIndexPath:</br>
+     - (UICollectionViewCell *)collectionView:(UICollectionView *)</br>collectionView cellForItemAtIndexPath:</br>(NSIndexPath *)indexPath</br>
+     {</br>
+     //重用cell</br>
+     UICollectionViewCell *cell = </br>[collectionView dequeueReusableCellWithReuseIdentifier:kcellIdentifier </br>forIndexPath:indexPath];</br>
+     //赋值</br>
+     UIImageView *imageView = (UIImageView *)[cell viewWithTag:1];</br>
+     UILabel *label = (UILabel *)[cell viewWithTag:2];</br>
+     NSString *imageName = [NSString stringWithFormat:</br>@"%ld.JPG",(long)indexPath.row];</br>
+     imageView.image = [UIImage imageNamed:imageName];</br>
+     label.text = imageName;</br>
+     
+     cell.backgroundColor = [UIColor redColor];</br>
+     return cell;</br>
+     
+     }</br>
+     // The view that is returned must be retrieved from a call to -</br>dequeueReusableSupplementaryViewOfKind:withReuseIdentifier:forIndexPath:</br>
+     - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView </br>viewForSupplementaryElementOfKind:</br>(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{</br>
+     
+     NSString *reuseIdentifier;</br>
+     if ([kind isEqualToString: UICollectionElementKindSectionFooter ]){</br>
+     reuseIdentifier = kfooterIdentifier;</br>
+     }else{</br>
+     reuseIdentifier = kheaderIdentifier;</br>
+     }</br>
+     
+     UICollectionReusableView *view = </br> [collectionView dequeueReusableSupplementaryViewOfKind :kind  </br> withReuseIdentifier:reuseIdentifier   forIndexPath:indexPath];</br>
+     
+     UILabel *label = (UILabel *)[view viewWithTag:1];</br>
+     if ([kind isEqualToString:UICollectionElementKindSectionHeader]){</br>
+     label.text = [NSString stringWithFormat:@"这是header:%d",indexPath.section];</br>
+     }</br>
+     else if ([kind isEqualToString:UICollectionElementKindSectionFooter]){</br>
+     view.backgroundColor = [UIColor lightGrayColor];</br>
+     label.text = [NSString stringWithFormat:@"这是footer:%d",indexPath.section];</br>
+     }</br>
+     return view;</br>
+     }</br>
+     //定义每个UICollectionViewCell 的大小</br>
+     - (CGSize)collectionView:(UICollectionView *)collectionView layout:</br>(UICollectionViewLayout*)collectionViewLayout </br>sizeForItemAtIndexPath:(NSIndexPath *)indexPath</br>
+     {</br>
+     return CGSizeMake(60, 80);</br>
+     }</br>
+     //定义每个Section 的 margin</br>
+     -(UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:</br>(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section</br>
+     {</br>
+     return UIEdgeInsetsMake(15, 15, 5, 15);//分别为上、左、下、右</br>
+     }</br>
+     //返回头headerView的大小</br>
+     -(CGSize)collectionView:(UICollectionView *)collectionView </br>layout:(UICollectionViewLayout </br>*)collectionViewLayout referenceSizeForHeaderInSection:</br>(NSInteger)section{</br>
+     CGSize size={320,45};</br>
+     return size;</br>
+     }</br>
+     //返回头footerView的大小</br>
+     - (CGSize)collectionView:(UICollectionView *)collectionView layout:</br>(UICollectionViewLayout*)collectionViewLayout</br> referenceSizeForFooterInSection:(NSInteger)section</br>
+     {</br>
+     CGSize size={320,45};</br>
+     return size;</br>
+     }</br>
+     //每个section中不同的行之间的行间距</br>
+     - (CGFloat)collectionView:(UICollectionView *)collectionView layout:</br>(UICollectionViewLayout*)collectionViewLayout </br>minimumLineSpacingForSectionAtIndex:(NSInteger)section</br>
+     {</br>
+     return 10;</br>
+     }</br>
+     //每个item之间的间距</br>
+     //- (CGFloat)collectionView:(UICollectionView *)collectionView layout:</br>(UICollectionViewLayout*)collectionViewLayout</br> minimumInteritemSpacingForSectionAtIndex:(NSInteger)section</br>
+     //{</br>
+     //    return 100;</br>
+     //}</br>
+     //选择了某个cell</br>
+     - (void)collectionView:(UICollectionView *)collectionView </br>didSelectItemAtIndexPath:(NSIndexPath *)indexPath</br>
+     {</br>
+     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];</br>
+     [cell setBackgroundColor:[UIColor greenColor]];</br>
+     }  </br>
+     //取消选择了某个cell  </br>
+     - (void)collectionView:(UICollectionView *)collectionView</br> didDeselectItemAtIndexPath:(NSIndexPath *)indexPath</br>
+     {  </br>
+     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath]; </br>
+     [cell setBackgroundColor:[UIColor redColor]];  </br>
+     }</br>
+<td><font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

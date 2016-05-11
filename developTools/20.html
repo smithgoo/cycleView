@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     代码动态的创建了一个UILabel,并且把相关常用的属性都列举了.希望对大家有用.</br>
+     - (void)viewDidLoad {</br>
+     //创建uilabel</br>
+     UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake(20, 40, 280, 80)];</br>
+     //设置背景色</br>
+     label1.backgroundColor = [UIColor grayColor];</br>
+     //设置tag</br>
+     label1.tag = 91;</br>
+     //设置标签文本</br>
+     label1.text = @"CCBASE.NET!";</br>
+     //设置标签文本字体和字体大小</br>
+     label1.font = [UIFont fontWithName:@"Arial" size:30];</br>
+     //设置文本对齐方式</br>
+     label1.textAlignment = UITextAlignmentCenter;</br>
+     //文本对齐方式有以下三种</br>
+     //typedef enum {</br>
+     //    UITextAlignmentLeft = 0,左对齐</br>
+     //    UITextAlignmentCenter,居中对齐</br>
+     //    UITextAlignmentRight, 右对齐</br>
+     //} UITextAlignment;</br>
+     //文本颜色</br>
+     label1.textColor = [UIColor blueColor];</br>
+     //超出label边界文字的截取方式</br>
+     label1.lineBreakMode = UILineBreakModeTailTruncation;</br>
+     //截取方式有以下6种</br>
+     //typedef enum {</br>
+     //    UILineBreakModeWordWrap = 0,    以空格为边界，保留整个单词</br>
+     //    UILineBreakModeCharacterWrap,   保留整个字符</br>
+     //    UILineBreakModeClip,            到边界为止</br>
+     //    UILineBreakModeHeadTruncation,  省略开始，以……代替</br>
+     //    UILineBreakModeTailTruncation,  省略结尾，以……代替</br>
+     //    UILineBreakModeMiddleTruncation,省略中间，以……代替，多行时作用于最后一行</br>
+     //} UILineBreakMode;</br>
+     //文本文字自适应大小</br>
+     label1.adjustsFontSizeToFitWidth = YES;</br>
+     //当adjustsFontSizeToFitWidth=YES时候，如果文本font要缩小时</br>
+     //baselineAdjustment这个值控制文本的基线位置，只有文本行数为1是有效</br>
+     label1.baselineAdjustment = UIBaselineAdjustmentAlignCenters;</br>
+     //有三种方式</br>
+     //typedef enum {</br>
+     //    UIBaselineAdjustmentAlignBaselines = 0, 默认值文本最上端于label中线对齐</br>
+     //    UIBaselineAdjustmentAlignCenters,//文本中线于label中线对齐</br>
+     //    UIBaselineAdjustmentNone,//文本最低端与label中线对齐</br>
+     //} UIBaselineAdjustment;</br>
+     //文本最多行数，为0时没有最大行数限制</br>
+     label1.numberOfLines = 2;</br>
+     //最小字体，行数为1时有效，默认为0.0</br>
+     label1.minimumFontSize = 10.0;</br>
+     //文本高亮</br>
+     label1.highlighted = YES;</br>
+     //文本是否可变</br>
+     label1.enabled = YES;</br>
+     //去掉label背景色</br>
+     //label1.backgroundColor = [UIColor clearColor];</br>
+     //文本阴影颜色</br>
+     label1.shadowColor = [UIColor grayColor];</br>
+     //阴影大小</br>
+     label1.shadowOffset = CGSizeMake(1.0, 1.0);</br>
+     //是否能与用户交互</br>
+     label1.userInteractionEnabled = YES;</br>
+     [self.view addSubview:label1];</br>
+     [label1 release];</br>
+     [super viewDidLoad];</br>
+     }</br>
+     
+    
+    
+         
+         <font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

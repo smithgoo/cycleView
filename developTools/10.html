@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     1.类目</br>
+     类目就是为已存在的类添加新的方法。但是不能添加实例变量。比如系统的类，我们看不到他的.m文件，所以没有办法用直接添加方法的方式去实现。
+     @interface NSMutableArray (Sort) //为NSMutableArray类添加Sort方法，Sort就是类目名，做到见名知意</br>
+     -(void)invert;//方法</br>
+     @end</br>
+     实现部分</br>
+     #import "NSMutableArray+Sort.h"</br>
+     @implementation NSMutableArray (Sort)</br>
+     -(void)invert</br>
+     {</br>
+     NSUInteger count = self.count;</br>
+     for (int i = 0; i<count/2; i++)</br>
+         {</br>
+         [self exchangeObjectAtIndex:i withObjectAtIndex:count-i-1];//第一个对象和最后一个对象交换</br>
+         }</br>
+         }</br>
+         @end</br>
+         在主函数里边可以直接调用上边的invert方法</br>
+         NSMutableArray * arr = [[NSMutableArray alloc]initWithObjects:@"12",@"4",@"89",@"88",@"36", nil];</br>
+         [arr invert];</br>
+         NSLog(@"%@",arr);</br>
+         打印结果：</br>
+         2012-08-13 11:12:03.324 类目[980:14503] (</br>
+         36,</br>
+         88,</br>
+         89,</br>
+         4,</br>
+         12</br>
+         )</br>
+         
+         Category的使用场景有那些呢：</br>
+         1、类包含了很多个方法实现，而这些方法需要不同团队的成员来实现</br>
+         2、当你在使用基础类库中的类时，你不想继承这些类而只想添加一些方法时。</br>
+         
+         Category能实现上面的需求，当然也有使用Category是需要注意的问题：</br>
+         1、Category可以访问原始类的实例变量，但不能添加实例变量，如果想添加变量，那就通过继承创建子类来实现。</br>
+         2、Category可以重载原始类的方法，不大不推荐这么做，这样会覆盖掉原始类的方法。如果确实要重载，那就通过继承创建子类来实现。</br>
+         3、和普通接口有所区别的是，在Category的实现文件中的实例方法只要你不去调用它你可以不用实现所有声明的所有方法。</br>
+         2.延展</br>
+         延展的作用就是定义自己的私有方法。</br>
+         形式和类目相同，不用新创建文件，只是把类目的interface地方的文件放在了你需要扩展的类的.m文件里边。</br>
+         #import "Student.h"</br>
+         @interface Student (extension)//为Student类创建一个私有的方法text</br>
+         -(void)text;</br>
+         @end</br>
+         
+         @implementation Student</br>
+         -(void)hello;</br>
+         {</br>
+         [self  text];</br>
+         }</br>
+         
+         -(void)text</br>
+         {</br>
+         NSLog(@"你好");</br>
+         }</br>
+         @end</br>
+         
+         外界  [student hello]的时候就会打印出“你好”。但是在外界不能调用text方法，[student text]是不对的。只能在.m文件里边通过self来调用私有方法text。隐藏了内部的实现。</br>
+         3.协议</br>
+         （1）.协议声明了可以被其他的类实现的方法。协议本身必不会去实现。</br>
+         （2）.协议不是类，只是一个其他对象可以实现的接口。</br>
+         定义一个协议：</br>
+         #import <Foundation/Foundation.h></br>
+         @protocol MarryProtocol <NSObject>//定义一个结婚协议，结婚协议也可以继承其它的协议。</br>
+             @required   //必须遵守的协议，在遵守MarryProtocol协议的类的.m文件中去实现里边的方法。</br>
+             - (void)washClothes;</br>
+             - (void)cook;</br>
+             @optional  //可选的协议</br>
+             - (void)makeMoney;</br>
+             @end</br>
+             代理（委托）模式：自己有需求，但是让别人去做。</br>
+             定义一个Men类</br>
+             #import <Foundation/Foundation.h></br>
+                 #import "RoomService.h"</br>
+                 @interface Men : NSObject
+                 @property(nonatomic,retain)NSString * name;</br>
+                 @property(nonatomic,assign)id<MarryProtocol> mate;//定义一个代理</br>
+                     -(id)initWithName:(NSString *)name;</br>
+                     -(void)needEat;</br>
+                     @end</br>
+                     定义一个Women类</br>
+                     #import <Foundation/Foundation.h></br>
+                         #import "MarryProtocol"</br>
+                         @interfaceWomen : NSObject <MarryProtocol>  //遵守协议</br>
+                             @property(nonatomic,retain)NSString * name;</br>
+                             -(id)initWithName:(NSString *)name;</br>
+                             @end</br>
+                             在Men的实现里边</br>
+                             -(void)needEat</br>
+                             {</br>
+                             [self.mate  cook];</br>
+                             }</br>
+                             在Women的实现里边有一个方法</br>
+                             -(void)cook</br>
+                             {</br>
+                             NSLog(%@"wonmen正在做饭")；</br>
+                             }</br>
+                             主函数里边</br>
+                             men.mate = women;</br>
+                             [men needEat];</br>
+                             打印出：wonmen正在做饭</br>
+                             4.协议也可以写在一个类里边，用到的时候引入类的头文件就可以。</br>
+
+<td><font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

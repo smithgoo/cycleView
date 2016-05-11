@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>object-c 类的声明和定义</title>
+ </head>
+ <body></br>
+     1.关键字命名：为了避免与已有的c，C++关键字冲突，ObjectC关键字都有@开始：</br>
+     如：@classs，@interface，@private，@try，@catch，@protocol等。</br>
+     
+     2.oc类分为2个文件，一个是.h文件，一个是.m文件：</br>
+     .h文件：存放类，函数的申明；类申明使用关键字@interface @end来申明；</br>
+     .m文件：存放类的具体实现；类实现使用关键字@implementation @end来实现；</br>
+     
+     3.对象的方法和类的方法：</br>
+     +表示类的方法；</br>
+     -表示对象的方法</br>
+     
+     4.类的申明 Dog.h：</br>
+     #import<Foundation/Foundation.h></br>
+         @interface Dog:NSObject{</br>
+         
+         }</br>
+         @end</br>
+         
+         5.类的实现 Dog.m：</br>
+         #import "Dog.h"</br>
+         @implementation Dog</br>
+         
+         @end</br>
+         
+         6.创建和销毁OC对象：</br>
+         创建对象：Dog *dog=[Dog alloc];//申明对象必须要带*号，即代表指针，也代表引用</br>
+         初始化：[dog init]；</br>
+         销毁对象：[dog release]; </br>
+         
+         7.类中的字段和函数：</br>
+         @interface Dog:NSObject</br>
+         {</br>
+         
+         //字段定义在此 </br>
+         int age; </br>
+         }  </br>
+         //函数定义在此：OC的函数全部是public类型的，可以用其他方式实现私有函数</br>
+         -(void)setAge:(int)newAge;</br>
+         @end</br>
+ 
+ 示例代码：</br>
+ 
+ //Dog.h 类申明文件</br>
+ #import<Foundation/Foundation.h></br>
+     @interface Dog:NSObject{</br>
+     int age;</br>
+     }</br>
+     -(id)init;</br>
+     -(id)initWidthAge:(int)newAge;</br>
+     -(int)getAge;</br>
+     -(void)setAge:(int)newAge;</br>
+     @end</br>
+     
+     </br>
+     //Dog.m 类的实现</br>
+     #import "Dog.h"</br>
+     @implementation Dog</br>
+     -(id)init{</br>
+     return [self initWithAge:10];</br>
+     }</br>
+     -(id)initWithAge:(int)newAge{</br>
+     self=[super init];</br>
+     if(self){</br>
+     age=newAge;</br>
+     }</br>
+     return self;</br>
+     }</br>
+     -(int)getAge{</br>
+     return age;  </br>
+     }  </br>
+     -(void)setAge:(int)newAge{  </br>
+     age=newAge;  </br>
+     }   </br>
+     @end</br>
+ 
+ <td><font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br>
+ </body>
+</html>

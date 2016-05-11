@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     UIScrollView 类负责所有基于 UIKit 的滚动操作。</br>
+     一、创建</br>
+     [java] view plaincopy</br>
+     CGRect bounds = [ [ UIScreen mainScreen ] </br>applicationFrame ] ;</br>
+     UIScrollView* scrollView = [ [UIScrollView alloc ] </br>initWithFrame:bounds ];</br>
+     当你创建完滚动视图后，你可以将另一个视图的内容粘合到滚动视图的空白页上。</br>这回创建一个滚动的内容窗口：
+     [java] view plaincopy</br>
+     [ scrollView addSubview:myView];</br>
+     你必须给出内容的实际大小，这样滚动视图才知道滚动的范围：</br>
+     [java] view plaincopy</br>
+     scrollView.contentSize = myView.frame.size;</br>
+     要开启缩放功能需要调整视图的两个属性，分别是maxinumZoomScale</br> 和 mininumZoomScale 。这样就可以允许用户使用捏合手势调整内容大小：</br>
+     [java] view plaincopy</br>
+     scrollView.maxinumZoomScale = 2.0;//允许放大2倍</br>
+     scrollView.mininumZoomScale = 0.5;//允许放大到0.5倍</br>
+     要打开缩放功能，你还需要增加一个UIScrollViewDelegate 代理，</br>通过一个名为 viewForZoomingScrollView</br>
+     的方法做出响应。这个方法会返回进行缩放时所使用的 UIView 对象：</br>
+     [java] view plaincopy</br>
+     scrollView.delegate = self;</br>
+     - (UIView*)viewForZoomingInScrollView:(UIScrollView*)scrollView{</br>
+     <span style="white-space:pre">    </span>retutn myView;</br>
+     }</br>
+     Tips:对于大规模数据，你可能会在最初使用一个低于实际大小(1.0)的缩放比例，</br>让用户可以平滑地进行放大。</br>
+     二、属性</br>
+     除了上面用到的缩放属性外，滚动视图还有会让你多其他属性，</br>可以对现实内容的行为进行微调。</br>你可以对 UIScrollView 类进行多方位定制。</br>下面这些属性是最常用的。</br>
+     1.indicatorStyle</br>
+     指定你希望使用的滚动条指示器的类型。默认行为是在白边界上绘制黑色的滚动条，</br>这在大多数背景下都适用。可用风格如下：</br>
+     [java] view plaincopy</br>
+     UIScrollViewIndicatorStyleDefault</br>
+     UIScrollViewIndicatorStyleBlack</br>
+     UIScrollViewIndicatorStyleWhite</br>
+     2.contentOffset</br>
+     一个CGPoint结构，其中包含有要显示内容相对于窗口左上角的偏移量。</br>默认是从0×0开始的，但是你也可以将显示内容放在其他位置。</br>
+     3.directionalLockEnabled</br>
+     默认行为是允许用户同时进行横向和纵向的滚动。</br>将这个属性设置为YES会导致将用户的滚动行为锁定成只允许横向或纵向进行，</br>具体方向由初始姿态决定。</br>
+     4.bounces</br>
+     当用户抵达滚动区域边缘时，这个功能允许用户稍微拖动到边界外一点。</br>当用户松开手指后，这个区域会像个橡皮筋一样，弹回到原位，</br>给用户一个可见的提示，表示他已经到达了文档开始或结束位置。</br>如果不想让用户的滚动范围能够超出可见内容，可以将这个属性设置为NO。</br>
+     5.bouncesZoom</br>
+     类似于bounces 选项，这个方法可以令用户的缩放操作超出最大或最小缩放级别，</br>然后弹回到范围以内。如果你不想让用户能够超出你指定的范围进行缩放，将这个属性设置为NO。</br>
+     6.pagingEnabled</br>
+     当开启了分页功能时，滚动视图被分割成多个独立区段，</br>二用户的滚动体验则变成了页面翻转，你可以用这个属性来进行页面翻转。</br>
+     三、委托方法</br>
+     可以赋予滚动视图一个委托，下列委托方法会在特定时刻收到通知。</br>
+     [java] view plaincopy</br>
+     -(void)scrollViewDidScroll:(UIScrollView*)scrollView;</br>//会在视图滚动时收到通知。包括一个指向被滚动视图的指针，</br>从中可以读取contentOffset属性以确定其滚动到的位置。</br>
+     [java] view plaincopy</br>
+     -(void)scrollViewWillBeginDragging:(UISCrollView*)scrollView;</br>//当用户首次在某个方向上进行拖动时得到通知。</br>这个方法会得到被作为参数传递的滚动视图指针，</br>也同样可以从中读取 contentOffset 属性。</br>
+     [java] view plaincopy</br>
+     -(void)scrollViewDidEndDragging:</br>(UIScrollView*)scrollView willDecelerate:(BOOL)decelerate;</br>
+     //当用户抬起拖动到手指时得到通知。还会得到一个布尔值，</br>知名报告滚动视图最后位置之前，是否需要减速。</br>
+     [java] view plaincopy</br>
+     -(void)scrollViewWillBeginDecelerate:(UIScrollView*)scrollView;</br>//当用户抬起手指而视图需要继续移动时，会收到通知。</br>这个方法可以用来读取 contentOffset属性，</br>从而判断出当用户抬起手指钱最后一次滚动到的位置，</br>虽然这个位置并不会使滚动条的最终停止位置。</br>
+     [java] view plaincopy</br>
+     -(void)scrollViewDidEndDecelerating:(UIScrollView*)scrollView;</br>//当上面提到的减速完毕、滚动视图停止时得到通知。</br>收到这个通知的时刻，滚动视图的contentOffset属性会反映出滚动条最终停止的位置。</br>
+     [java] view plaincopy</br>
+     -(void)scrollViewDidEndZooming:</br>(UIScrollview*)scrollView withView:</br>(UIView*)view atScale:(float)scale;</br>//当用户对内容进行缩放时，会收到通知。</br>缩放比例表示为一个浮点值，会作为参数传递进来。</br>
+     [java] view plaincopy</br>
+     -(BOOL)scrollViewShouldScrollToTop:(UIScrollView*)scrollView;</br>
+     -(void)scrollViewDidScrollToTop:(UIScrollView*)scrollView;</br>
+     //当用户点出iPhone状态条时，滚动视图委托可以决定视图是否滚动回到开头。</br>
+     OK，都总结完了，后面会写一个页面翻转的例子敬请关注。</br>
+     属性	作用</br>
+     CGPoint contentOffSet	监控目前滚动的位置</br>
+     CGSize contentSize	滚动范围的大小</br>
+     UIEdgeInsets contentInset	视图在scrollView中的位置</br>
+     id<UIScrollerViewDelegate></br>
+         delegate	设置协议</br>
+         BOOL directionalLockEnabled	指定控件是否只能在一个方向上滚动</br>
+         BOOL bounces	控制控件遇到边框是否反弹</br>
+         BOOL alwaysBounceVertical	控制垂直方向遇到边框是否反弹</br>
+         BOOL alwaysBounceHorizontal	控制水平方向遇到边框是否反弹</br>
+         BOOL pagingEnabled	控制控件是否整页翻动</br>
+         BOOL scrollEnabled	控制控件是否能滚动</br>
+         BOOL showsHorizontalScrollIndicator	控制是否显示水平方向的滚动条</br>
+         BOOL</br>
+         showsVerticalScrollIndicator	控制是否显示垂直方向的滚动条</br>
+         UIEdgeInsets scrollIndicatorInsets	指定滚动条在scrollerView中的位置</br>
+         UIScrollViewIndicatorStyle</br>
+         indicatorStyle	设定滚动条的样式</br>
+         float decelerationRate	改变scrollerView的减速点位置</br>
+         BOOL tracking	监控当前目标是否正在被跟踪</br>
+         BOOL dragging	监控当前目标是否正在被拖拽</br>
+         BOOL decelerating	监控当前目标是否正在减速</br>
+         BOOL delaysContentTouches	控制视图是否延时调用开始滚动的方法</br>
+         BOOL canCancelContentTouches	控制控件是否接触取消touch的事件</br>
+         float minimumZoomScale	缩小的最小比例</br>
+         float maximumZoomScale	放大的最大比例</br>
+         float zoomScale	设置变化比例</br>
+         BOOL bouncesZoom	控制缩放的时候是否会反弹</br>
+         BOOL zooming	判断控件的大小是否正在改变</br>
+         BOOL zoomBouncing	判断是否正在进行缩放反弹</br>
+         BOOL scrollsToTop	控制控件滚动到顶部</br>
+<td><font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

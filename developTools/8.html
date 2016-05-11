@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     /* </br>
+     NSString</br>
+     */</br>
+     //一、NSString</br>
+     /----------------创建字符串的方法----------------/</br>
+     
+     //1、创建常量字符串。</br>
+     NSString *astring = @"This is a String!";</br>
+     
+     //2、创建空字符串，给予赋值。</br>
+     
+     NSString *astring = [[NSString alloc] init];</br>
+     astring = @"This is a String!";</br>
+     [astring release];</br>
+     NSLog(@"astring:%@",astring);</br>
+     
+     //3、在以上方法中，提升速度:initWithString方法</br>
+     
+     NSString *astring = [[NSString alloc] initWithString:@"This is a String!"];</br>
+     NSLog(@"astring:%@",astring);</br>
+     [astring release];</br>
+     
+     //4、用标准c创建字符串:initWithCString方法</br>
+     
+     char Cstring = "This is a String!";</br>
+     NSString astring = [[NSString alloc] initWithCString:Cstring];</br>
+     NSLog(@"astring:%@",astring);</br>
+     [astring release];</br>
+     
+     //5、创建格式化字符串:占位符（由一个%加一个字符组成）</br>
+     
+     int i = 1;</br>
+     int j = 2;</br>
+     NSString *astring = [[NSString alloc] initWithString:[NSString stringWithFormat:@"%d.This is %i string!",i,j]];</br>
+     NSLog(@"astring:%@",astring);</br>
+     [astring release];</br>
+     
+     //6、创建临时字符串</br>
+     
+     NSString *astring;</br>
+     astring = [NSString stringWithCString:"This is a temporary string"];</br>
+     NSLog(@"astring:%@",astring);</br>
+     
+     /----------------从文件读取字符串:initWithContentsOfFile方法----------------/</br>
+     
+     NSString path = @"astring.text";</br>
+     NSString astring = [[NSString alloc] initWithContentsOfFile:path];</br>
+     NSLog(@"astring:%@",astring);</br>
+     [astring release];</br>
+     
+     /----------------写字符串到文件:writeToFile方法----------------/</br>
+     
+     NSString astring = [[NSString alloc] initWithString:@"This is a String!"];</br>
+     NSLog(@"astring:%@",astring);</br>
+     NSString path = @"astring.text";</br>
+     [astring writeToFile: path atomically: YES];</br>
+     [astring release];</br>
+     
+     /----------------比较两个字符串----------------/</br>
+     
+     //用C比较:strcmp函数</br>
+     
+     char string1[] = "string!";</br>
+     char string2[] = "string!";</br>
+     if(strcmp(string1, string2) = = 0)</br>
+     {</br>
+     NSLog(@"1");</br>
+     }</br>
+     
+     //isEqualToString方法</br>
+     NSString astring01 = @"This is a String!";</br>
+     NSString astring02 = @"This is a String!";</br>
+     BOOL result = [astring01 isEqualToString:astring02];</br>
+     NSLog(@"result:%d",result);</br>
+     
+     //compare方法(comparer返回的三种值)</br>
+     NSString astring01 = @"This is a String!";</br>
+     NSString astring02 = @"This is a String!";</br>
+     BOOL result = [astring01 compare:astring02] = = NSOrderedSame;</br>
+     NSLog(@"result:%d",result);</br>
+     //NSOrderedSame判断两者内容是否相同</br>
+     
+     NSString astring01 = @"This is a String!";</br>
+     NSString astring02 = @"this is a String!";</br>
+     BOOL result = [astring01 compare:astring02] = = NSOrderedAscending;</br>
+     NSLog(@"result:%d",result);</br>
+     //NSOrderedAscending判断两对象值的大小(按字母顺序进行比较，astring02大于astring01为真)</br>
+     
+     NSString astring01 = @"this is a String!";</br>
+     NSString astring02 = @"This is a String!";</br>
+     BOOL result = [astring01 compare:astring02] = = NSOrderedDescending;</br>
+     NSLog(@"result:%d",result);</br>
+     //NSOrderedDescending判断两对象值的大小(按字母顺序进行比较，astring02小于astring01为真)</br>
+     
+     //不考虑大小写比较字符串1</br>
+     NSString astring01 = @"this is a String!";</br>
+     NSString astring02 = @"This is a String!";</br>
+     BOOL result = [astring01 caseInsensitiveCompare:astring02] = = NSOrderedSame;</br>
+     NSLog(@"result:%d",result);</br>
+     //NSOrderedDescending判断两对象值的大小(按字母顺序进行比较，astring02小于astring01为真)</br>
+     
+     //不考虑大小写比较字符串2</br>
+     NSString astring01 = @"this is a String!";</br>
+     NSString astring02 = @"This is a String!";</br>
+     BOOL result = [astring01 compare:astring02
+     options:NSCaseInsensitiveSearch | NSNumericSearch] = = NSOrderedSame;</br>
+     NSLog(@"result:%d",result);</br>
+     
+     //NSCaseInsensitiveSearch:不区分大小写比较 NSLiteralSearch:进行完全比较，区分大小写 NSNumericSearch:比较字符串的字符个数，而不是字符值。</br>
+     
+     /----------------改变字符串的大小写----------------/</br>
+     
+     NSString string1 = @"A String";</br>
+     NSString string2 = @"String";</br>
+     NSLog(@"string1:%@",[string1 uppercaseString]);//大写</br>
+     NSLog(@"string2:%@",[string2 lowercaseString]);//小写</br>
+     NSLog(@"string2:%@",[string2 capitalizedString]);//首字母大小</br>
+     
+     /----------------在串中搜索子串----------------/</br>
+     
+     NSString string1 = @"This is a string";</br>
+     NSString string2 = @"string";</br>
+     NSRange range = [string1 rangeOfString:string2];</br>
+     int location = range.location;</br>
+     int leight = range.length;</br>
+     NSString *astring = [[NSString alloc] initWithString:[NSString stringWithFormat:@"Location:%i,Leight:%i",location,leight]];</br>
+     NSLog(@"astring:%@",astring);</br>
+     [astring release];</br>
+     
+     /----------------抽取子串 ----------------/</br>
+     
+     //-substringToIndex: 从字符串的开头一直截取到指定的位置，但不包括该位置的字符</br>
+     NSString string1 = @"This is a string";</br>
+     NSString string2 = [string1 substringToIndex:3];</br>
+     NSLog(@"string2:%@",string2);</br>
+     
+     //-substringFromIndex: 以指定位置开始（包括指定位置的字符），并包括之后的全部字符</br>
+     NSString string1 = @"This is a string";</br>
+     NSString string2 = [string1 substringFromIndex:3];</br>
+     NSLog(@"string2:%@",string2);</br>
+     
+     //-substringWithRange: //按照所给出的位置，长度，任意地从字符串中截取子串</br>
+     NSString string1 = @"This is a string";</br>
+     NSString string2 = [string1 substringWithRange:NSMakeRange(0, 4)];</br>
+     NSLog(@"string2:%@",string2);</br>
+     
+     //扩展路径</br>
+     
+     NSString Path = @"~/NSData.txt";</br>
+     NSString absolutePath = [Path stringByExpandingTildeInPath];</br>
+     NSLog(@"absolutePath:%@",absolutePath);</br>
+     NSLog(@"Path:%@",[absolutePath stringByAbbreviatingWithTildeInPath]);</br>
+     
+     //文件扩展名</br>
+     NSString *Path = @"~/NSData.txt";</br>
+     NSLog(@"Extension:%@",[Path pathExtension]);</br>
+     
+     /*</br>
+     NSMutableString</br>
+     */
+     </br>
+     /---------------给字符串分配容量----------------/</br>
+     //stringWithCapacity:</br>
+     NSMutableString *String;</br>
+     String = [NSMutableString stringWithCapacity:40];</br>
+     
+     /---------------在已有字符串后面添加字符----------------/</br>
+     
+     //appendString: and appendFormat:</br>
+     
+     NSMutableString String1 = [[NSMutableString alloc] initWithString:@"This is a NSMutableString"];</br>
+     //[String1 appendString:@", I will be adding some character"];</br>
+     [String1 appendFormat:[NSString stringWithFormat:@", I will be adding some character"]];</br>
+     NSLog(@"String1:%@",String1); /</br>
+     
+     /--------在已有字符串中按照所给出范围和长度删除字符------/</br>
+     /
+     //deleteCharactersInRange:</br>
+     NSMutableString String1 = [[NSMutableString alloc] initWithString:@"This is a NSMutableString"];</br>
+     [String1 deleteCharactersInRange:NSMakeRange(0, 5)];</br>
+     NSLog(@"String1:%@",String1);</br>
+     
+     /--------在已有字符串后面在所指定的位置中插入给出的字符串------/</br>
+     
+     //-insertString: atIndex:</br>
+     NSMutableString *String1 = [[NSMutableString alloc] initWithString:@"This is a NSMutableString"];</br>
+     [String1 insertString:@"Hi! " atIndex:0];</br>
+     NSLog(@"String1:%@",String1);</br>
+     
+     /--------将已有的空符串换成其它的字符串------/</br>
+     
+     //-setString:</br>
+     NSMutableString *String1 = [[NSMutableString alloc] initWithString:@"This is a NSMutableString"];</br>
+     [String1 setString:@"Hello Word!"];</br>
+     NSLog(@"String1:%@",String1);</br>
+     
+     /--------按照所给出的范围，和字符串替换的原有的字符------/</br>
+     
+     //-setString:</br>
+     NSMutableString *String1 = [[NSMutableString alloc] initWithString:@"This is a NSMutableString"];</br>
+     [String1 replaceCharactersInRange:NSMakeRange(0, 4) withString:@"That"];</br>
+     NSLog(@"String1:%@",String1);</br>
+     
+     /-------------判断字符串内是否还包含别的字符串(前缀，后缀)-------------/</br>
+     //01：检查字符串是否以另一个字符串开头- (BOOL) hasPrefix: (NSString ) aString;</br>
+     NSString String1 = @"NSStringInformation.txt";</br>
+     [String1 hasPrefix:@"NSString"] = = 1 ? NSLog(@"YES") : NSLog(@"NO");</br>
+     [String1 hasSuffix:@".txt"] = = 1 ? NSLog(@"YES") : NSLog(@"NO");</br>
+     
+     //02：查找字符串某处是否包含其它字符串 - (NSRange) rangeOfString: (NSString *) aString，这一点前面在串中搜索子串用到过;</br>
+     
+     /*</br>
+     NSArray</br>
+     */</br>
+     
+     /---------------------------创建数组------------------------------/</br>
+     //NSArray *array = [[NSArray alloc] initWithObjects:</br>
+     @"One",@"Two",@"Three",@"Four",nil];</br>
+     
+     self.dataArray = array;</br>
+     [array release];</br>
+     
+     //- (unsigned) Count;数组所包含对象个数；</br>
+     NSLog(@"self.dataArray cound:%d",[self.dataArray count]);</br>
+     
+     //- (id) objectAtIndex: (unsigned int) index;获取指定索引处的对象;</br>
+     NSLog(@"self.dataArray cound 2:%@",[self.dataArray objectAtIndex:2]);</br>
+     
+     /--------------------------从一个数组拷贝数据到另一数组(可变数级)----------------------------/</br>
+     
+     //arrayWithArray:</br>
+     //NSArray array1 = [[NSArray alloc] init];</br>
+     NSMutableArray MutableArray = [[NSMutableArray alloc] init];</br>
+     NSArray *array = [NSArray arrayWithObjects:</br>
+     @"a",@"b",@"c",nil];</br>
+     NSLog(@"array:%@",array);</br>
+     MutableArray = [NSMutableArray arrayWithArray:array];</br>
+     NSLog(@"MutableArray:%@",MutableArray);</br>
+     
+     array1 = [NSArray arrayWithArray:array];</br>
+     NSLog(@"array1:%@",array1);</br>
+     
+     //Copy</br>
+     
+     //id obj;</br>
+     NSMutableArray newArray = [[NSMutableArray alloc] init];</br>
+     NSArray oldArray = [NSArray arrayWithObjects:</br>
+     @"a",@"b",@"c",@"d",@"e",@"f",@"g",@"h",nil];</br>
+     
+     NSLog(@"oldArray:%@",oldArray);</br>
+     for(int i = 0; i < [oldArray count]; i++)</br>
+         {</br>
+         obj = [[oldArray objectAtIndex:i] copy];</br>
+         [newArray addObject: obj];</br>
+         }</br>
+         //</br>
+         NSLog(@"newArray:%@", newArray);</br>
+         [newArray release];</br>
+         
+         //快速枚举</br>
+         
+         //NSMutableArray newArray = [[NSMutableArray alloc] init];</br>
+         NSArray oldArray = [NSArray arrayWithObjects:</br>
+         @"a",@"b",@"c",@"d",@"e",@"f",@"g",@"h",nil];</br>
+         NSLog(@"oldArray:%@",oldArray);</br>
+         
+         for(id obj in oldArray)</br>
+         {</br>
+         [newArray addObject: obj];</br>
+         }</br>
+         //</br>
+         NSLog(@"newArray:%@", newArray);</br>
+         [newArray release];</br>
+         
+         //Deep copy</br>
+         
+         //NSMutableArray newArray = [[NSMutableArray alloc] init];</br>
+         NSArray oldArray = [NSArray arrayWithObjects:</br>
+         @"a",@"b",@"c",@"d",@"e",@"f",@"g",@"h",nil];</br>
+         NSLog(@"oldArray:%@",oldArray);</br>
+         newArray = (NSMutableArray*)CFPropertyListCreateDeepCopy(kCFAllocatorDefault, (CFPropertyListRef)oldArray, kCFPropertyListMutableContainers);</br>
+         NSLog(@"newArray:%@", newArray);</br>
+         [newArray release];</br>
+         
+         //Copy and sort</br>
+         
+         //NSMutableArray newArray = [[NSMutableArray alloc] init];</br>
+         NSArray oldArray = [NSArray arrayWithObjects:</br>
+         @"b",@"a",@"e",@"d",@"c",@"f",@"h",@"g",nil];</br>
+         NSLog(@"oldArray:%@",oldArray);</br>
+         NSEnumerator *enumerator;</br>
+         enumerator = [oldArray objectEnumerator];</br>
+         id obj;</br>
+         while(obj = [enumerator nextObject])</br>
+         {</br>
+         [newArray addObject: obj];</br>
+         }</br>
+         [newArray sortUsingSelector:@selector(compare:)];</br>
+         NSLog(@"newArray:%@", newArray);</br>
+         [newArray release];</br>
+         
+         /---------------------------切分数组------------------------------/</br>
+         
+         //从字符串分割到数组－ componentsSeparatedByString:</br>
+         NSString string = [[NSString alloc] initWithString:@"One,Two,Three,Four"];</br>
+         NSLog(@"string:%@",string);</br>
+         NSArray array = [string componentsSeparatedByString:@","];</br>
+         NSLog(@"array:%@",array);</br>
+         [string release];</br>
+         
+         //从数组合并元素到字符串- componentsJoinedByString:</br>
+         NSArray array = [[NSArray alloc] initWithObjects:@"One",@"Two",@"Three",@"Four",nil];</br>
+         NSString string = [array componentsJoinedByString:@","];</br>
+         NSLog(@"string:%@",string);</br>
+         
+         /*</br>
+         NSMutableArray</br>
+         */</br>
+         /---------------给数组分配容量----------------/</br>
+         //NSArray *array;</br>
+         array = [NSMutableArray arrayWithCapacity:20];</br>
+         
+         /--------------在数组末尾添加对象----------------/</br>
+         //- (void) addObject: (id) anObject;</br>
+         //NSMutableArray *array = [NSMutableArray arrayWithObjects:</br>
+         @"One",@"Two",@"Three",nil];</br>
+         [array addObject:@"Four"];</br>
+         NSLog(@"array:%@",array);</br>
+         
+         /--------------删除数组中指定索引处对象----------------/</br>
+         //-(void) removeObjectAtIndex: (unsigned) index;</br>
+         //NSMutableArray *array = [NSMutableArray arrayWithObjects:</br>
+         @"One",@"Two",@"Three",nil];</br>
+         [array removeObjectAtIndex:1];</br>
+         NSLog(@"array:%@",array);</br>
+         
+         /-------------数组枚举---------------/</br>
+         //- (NSEnumerator )objectEnumerator;从前向后</br>
+         //NSMutableArray array = [NSMutableArray arrayWithObjects:</br>
+         @"One",@"Two",@"Three",nil];</br>
+         NSEnumerator *enumerator;</br>
+         enumerator = [array objectEnumerator];</br>
+         
+         id thingie;</br>
+         while (thingie = [enumerator nextObject]) {</br>
+         NSLog(@"thingie:%@",thingie);</br>
+         }</br>
+         
+         //- (NSEnumerator )reverseObjectEnumerator;从后向前</br>
+         //NSMutableArray array = [NSMutableArray arrayWithObjects:</br>
+         @"One",@"Two",@"Three",nil];</br>
+         NSEnumerator *enumerator;</br>
+         enumerator = [array reverseObjectEnumerator];</br>
+         
+         id object;</br>
+         while (object = [enumerator nextObject]) {</br>
+         NSLog(@"object:%@",object);</br>
+         }
+         
+         //快速枚举</br>
+         //NSMutableArray array = [NSMutableArray arrayWithObjects:</br>
+         @"One",@"Two",@"Three",nil];</br>
+         for(NSString string in array)
+         {</br>
+         NSLog(@"string:%@",string);</br>
+         }</br>
+         
+         /*</br>
+         NSDictionary</br>
+         */</br>
+         
+         /------------------------------------创建字典------------------------------------/</br>
+         //- (id) initWithObjectsAndKeys;</br>
+         
+         //NSDictionary dictionary = [[NSDictionary alloc] initWithObjectsAndKeys:@"One",@"1",@"Two",@"2",@"Three",@"3",nil];</br>
+         NSString string = [dictionary objectForKey:@"One"];</br>
+         NSLog(@"string:%@",string);</br>
+         NSLog(@"dictionary:%@",dictionary);</br>
+         [dictionary release];</br>
+         
+         /*</br>
+         NSMutableDictionary</br>
+         */</br>
+         
+         /------------------------------------创建可变字典------------------------------------/</br>
+         //创建</br>
+         NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];</br>
+         
+         //添加字典</br>
+         [dictionary setObject:@"One" forKey:@"1"];</br>
+         [dictionary setObject:@"Two" forKey:@"2"];</br>
+         [dictionary setObject:@"Three" forKey:@"3"];</br>
+         [dictionary setObject:@"Four" forKey:@"4"];</br>
+         NSLog(@"dictionary:%@",dictionary);</br>
+         
+         //删除指定的字典</br>
+         [dictionary removeObjectForKey:@"3"];</br>
+         NSLog(@"dictionary:%@",dictionary);</br>
+         
+         /*</br>
+         NSValue（对任何对象进行包装）</br>
+         */</br>
+         
+         /--------------------------------将NSRect放入NSArray中------------------------------------/</br>
+         //将NSRect放入NSArray中</br>
+         NSMutableArray array = [[NSMutableArray alloc] init];</br>
+         NSValue value;</br>
+         CGRect rect = CGRectMake(0, 0, 320, 480);</br>
+         value = [NSValue valueWithBytes:&rect objCType:@encode(CGRect)];</br>
+         [array addObject:value];</br>
+         NSLog(@"array:%@",array);
+         </br>
+         //从Array中提取</br>
+         value = [array objectAtIndex:0];</br>
+         [value getValue:&rect];</br>
+         NSLog(@"value:%@",value);</br>
+         
+         /*</br>
+         从目录搜索扩展名为jpg的文件</br>
+         */</br>
+         
+         //NSFileManager fileManager = [NSFileManager defaultManager];</br>
+         NSString home;</br>
+         home = @"../Users/";</br>
+         
+         NSDirectoryEnumerator *direnum;</br>
+         direnum = [fileManager enumeratorAtPath: home];</br>
+         
+         NSMutableArray *files = [[NSMutableArray alloc] init];</br>
+         
+         //枚举</br>
+         NSString *filename;</br>
+         while (filename = [direnum nextObject]) {</br>
+         if([[filename pathExtension] hasSuffix:@"jpg"]){</br>
+         [files addObject:filename];</br>
+         }</br>
+         }</br>
+         
+         //快速枚举</br>
+         //for(NSString *filename in direnum)</br>
+         //{</br>
+         // if([[filename pathExtension] isEqualToString:@"jpg"]){</br>
+         // [files addObject:filename];</br>
+         // }</br>
+         //}</br>
+         NSLog(@"files:%@",files);</br>
+         
+         //枚举</br>
+         NSEnumerator *filenum;</br>
+         filenum = [files objectEnumerator];</br>
+         while (filename = [filenum nextObject]) {</br>
+         NSLog(@"filename:%@",filename);</br>
+         }</br>
+         
+         //快速枚举</br>
+         //for(id object in files)</br>
+         //{</br>
+         // NSLog(@"object:%@",object);</br>
+         //}</br>
+<td><font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

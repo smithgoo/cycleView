@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     
+     示例代码：</br>
+     
+     
+     @interface TestViewController : UIViewController <UIAlertViewDelegate></br>
+         
+         {</br>
+         
+         UIAlertView *baseAlert;</br>
+         
+         }</br>
+         
+         @end</br>
+         
+         
+         
+         @implementation TestViewController</br>
+         
+         - (void) dismiss</br>
+         
+         {</br>
+         
+         [baseAlert dismissWithClickedButtonIndex:0 animated:NO];</br>
+         
+         }</br>
+         
+         
+         
+         - (void) action: (UIBarButtonItem *) item</br>
+         
+         {</br>
+         
+         baseAlert = [[[UIAlertView alloc] initWithTitle:@"请稍后。。。" message:nil delegate:self </br>cancelButtonTitle:nil otherButtonTitles: nil] autorelease];</br>
+         
+         [baseAlert show];</br>
+         
+         
+         
+         //创建并添加一个活动指示器</br>
+         
+         UIActivityIndicatorView *aiv = [[UIActivityIndicatorView alloc] </br>initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];</br>
+         
+         aiv.center = CGPointMake(baseAlert.bounds.size.width / 2.0f, baseAlert.bounds.size.height - </br>40.0f);</br>
+         
+         [aiv startAnimating];</br>
+         
+         [baseAlert addSubview:aiv];</br>
+         
+         [aiv release];</br>
+         
+         
+         
+         // 3s后自动消失</br>
+         
+         [self performSelector:@selector(dismiss) withObject:nil afterDelay:3.0f];</br>
+         
+         }</br>
+<td><font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

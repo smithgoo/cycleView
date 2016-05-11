@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     
+     代码动态的创建了一个UIButton,并且把相关常用的属性都列举了.希望对大家有用.</br>
+     //这里创建一个圆角矩形的按钮</br>
+     UIButton *button1 = [UIButton buttonWithType:UIButtonTypeRoundedRect];</br>
+     
+     // 能够定义的button类型有以下6种，</br>
+     // typedef enum {</br>
+     // UIButtonTypeCustom = 0, 自定义风格</br>
+     // UIButtonTypeRoundedRect, 圆角矩形</br>
+     // UIButtonTypeDetailDisclosure, 蓝色小箭头按钮，主要做详细说明用</br>
+     // UIButtonTypeInfoLight, 亮色感叹号</br>
+     // UIButtonTypeInfoDark, 暗色感叹号</br>
+     // UIButtonTypeContactAdd, 十字加号按钮</br>
+     // } UIButtonType;</br>
+     
+     //给定button在view上的位置</br>
+     button1.frame = CGRectMake(20, 20, 280, 40);</br>
+     
+     //button背景色</br>
+     button1.backgroundColor = [UIColor clearColor];</br>
+     
+     //设置button填充图片</br>
+     //[button1 setImage:[UIImage imageNamed:@"btng.png"] forState:UIControlStateNormal];</br>
+     
+     //设置button标题</br>
+     [button1 setTitle:@"点击" forState:UIControlStateNormal];</br>
+     
+     /* forState: 这个参数的作用是定义按钮的文字或图片在何种状态下才会显现*/</br>
+     //以下是几种状态</br>
+     // enum {</br>
+     // UIControlStateNormal = 0, 常规状态显现</br>
+     // UIControlStateHighlighted = 1 << 0, 高亮状态显现</br>
+         // UIControlStateDisabled = 1 << 1, 禁用的状态才会显现</br>
+         // UIControlStateSelected = 1 << 2, 选中状态</br>
+         // UIControlStateApplication = 0x00FF0000, 当应用程序标志时</br>
+         // UIControlStateReserved = 0xFF000000 为内部框架预留，可以不管他</br>
+         // };</br>
+         
+         /*</br>
+         * 默认情况下，当按钮高亮的情况下，图像的颜色会被画深一点，如果这下面的这个属性设置为no，</br>
+         * 那么可以去掉这个功能</br>
+         */</br>
+         button1.adjustsImageWhenHighlighted = NO;</br>
+         /*跟上面的情况一样，默认情况下，当按钮禁用的时候，图像会被画得深一点，设置NO可以取消设置*/</br>
+         button1.adjustsImageWhenDisabled = NO;</br>
+         /* 下面的这个属性设置为yes的状态下，按钮按下会发光*/</br>
+         button1.showsTouchWhenHighlighted = YES;</br>
+         
+         /* 给button添加事件，事件有很多种，我会单独开一篇博文介绍它们，下面这个时间的意思是</br>
+         按下按钮，并且手指离开屏幕的时候触发这个事件，跟web中的click事件一样。</br>
+         触发了这个事件以后，执行butClick:这个方法，addTarget:self 的意思是说，这个方法在本类中</br>
+         也可以传入其他类的指针*/</br>
+         [button1 addTarget:self action:@selector(butClick:) forControlEvents:UIControlEventTouchUpInside];</br>
+         
+         //显示控件</br>
+         [self.view addSubview:button1];</br>
+         注意：</br>
+         [button1 addTarget:self
+         action:@selector(alarmTimeDone:)
+         forControlEvents:UIControlEventTouchUpInside
+         ];</br>
+         
+         addTarget:self 是链接到self,一般都这样设置</br>
+         action:@selector(alarmTimeDone:) 时间处理函数</br>
+         forControlEvents:UIControlEventTouchUpInside 控件事件处理的消息</br>
+         
+         
+         //取消按钮已经添加的所有事件:(这个比较重要,若添加了两个事件  两个事件都会被触发)</br>
+         [btn removeTarget:nil action:nil forControlEvents:UIControlEventTouchUpInside];</br>
+         
+         何时释放release UIButton?</br>
+         是否在dealloc中对UIButton对象进行release操作，取决于UIButton初始化的方式。</br>
+         如果使用[UIButtonbuttonWithType:UIButtonTypeRoundedRect]这种方式，是不需要进行release操作的，因为这种方式是自动释放的。如果使用 [[UIButton alloc]init]的方式，则需要主动进行release释放操作。</br>
+         
+         IOS UIButton事件：</br>
+         
+         UIControlEventTouchDown</br>
+         单点触摸按下事件：用户点触屏幕，或者又有新手指落下的时候。</br>
+         UIControlEventTouchDownRepeat</br>
+         多点触摸按下事件，点触计数大于1：用户按下第二、三、或第四根手指的时候。</br>
+         UIControlEventTouchDragInside</br>
+         当一次触摸在控件窗口内拖动时。</br>
+         UIControlEventTouchDragOutside</br>
+         当一次触摸在控件窗口之外拖动时。</br>
+         UIControlEventTouchDragEnter</br>
+         当一次触摸从控件窗口之外拖动到内部时。</br>
+         UIControlEventTouchDragExit</br>
+         当一次触摸从控件窗口内部拖动到外部时。</br>
+         
+         UIControlEventTouchUpInside</br>
+         所有在控件之内触摸抬起事件。</br>
+         UIControlEventTouchUpOutside</br>
+         所有在控件之外触摸抬起事件(点触必须开始与控件内部才会发送通知)。</br>
+         UIControlEventTouchCancel</br>
+         所有触摸取消事件，即一次触摸因为放上了太多手指而被取消，或者被上锁或者电话呼叫打断。</br>
+         UIControlEventTouchChanged</br>
+         当控件的值发生改变时，发送通知。用于滑块、分段控件、以及其他取值的控件。你可以配置滑块控件何时发送通知，在滑块被放下时发送，或者在被拖动时发送。</br>
+         UIControlEventEditingDidBegin</br>
+         当文本控件中开始编辑时发送通知。</br>
+         UIControlEventEditingChanged</br>
+         当文本控件中的文本被改变时发送通知。</br>
+         UIControlEventEditingDidEnd</br>
+         当文本控件中编辑结束时发送通知。</br>
+         UIControlEventEditingDidOnExit</br>
+         当文本控件内通过按下回车键（或等价行为）结束编辑时，发送通知。</br>
+         UIControlEventAlltouchEvents</br>
+         通知所有触摸事件。</br>
+         UIControlEventAllEditingEvents</br>
+         通知所有关于文本编辑的事件。</br>
+         UIControlEventAllEvents</br>
+         通知所有事件。</br>
+         
+         
+         实例：</br>
+         [objc] view plaincopy在CODE上查看代码片派生到我的代码片</br>
+         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];</br>
+         // btn.frame = rect_screen;</br>
+         btn.frame = CGRectMake(frame.size.width - 20.0f - 30.0f, frame.size.height - 50.0f, 30.0f, 50.0f);</br>
+         btn.backgroundColor = [UIColor blueColor];</br>
+         
+         // UIControlEventTouchDragInside</br>
+         // UIControlEventTouchDragOutside</br>
+         
+         [btn addTarget:self action:@selector(dragInside) forControlEvents:UIControlEventTouchDragInside];</br>
+         [btn addTarget:self action:@selector(dragOutside) forControlEvents:UIControlEventTouchDragOutside];</br>
+         // dismissView</br>
+         [btn addTarget:self action:@selector(upInside) forControlEvents:UIControlEventTouchUpInside];</br>
+         [self addSubview:btn];</br>
+         return self;</br>
+         }
+         </br>
+         - (void)dragInside</br>
+         {</br>
+         NSLog(@"dragInside...");</br>
+         }</br>
+         
+         - (void)dragOutside</br>
+         {</br>
+         NSLog(@"dragOutside...");</br>
+         }</br>
+         - (void)upInside</br>
+         {  </br>
+         NSLog(@"upInside...");  </br>
+         }  </br>
+         
+         长按事件</br>
+         [objc] view plaincopy在CODE上查看代码片派生到我的代码片</br>
+         UIButton *aBtn=[UIButton buttonWithType:UIButtonTypeCustom];  </br>
+         [aBtn setFrame:CGRectMake(40, 100, 60, 60)];  </br>
+         [aBtn setBackgroundImage:[UIImage imageNamed:@"111.png"]forState:UIControlStateNormal];  </br>
+         //button点击事件  </br>
+         [aBtn addTarget:self action: </br>@selector(btnShort:)forControlEvents: </br>UIControlEventTouchUpInside]; 
+         //button长按事件  </br>
+         UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:selfaction:@selector(btnLong:)]; </br>
+         longPress.minimumPressDuration = 0.8; //定义按的时间  </br>
+         [aBtn addGestureRecognizer:longPress];  </br>
+         
+         -(void)btnLong:(UILongPressGestureRecognizer*)gestureRecognizer{  </br>
+         if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {  </br>
+         NSLog(@"长按事件");  </br>
+         UIAlertView *alert=[[UIAlertView alloc]initWithTitle:@"消息" message:@"确定删除该模式吗？" delegate:selfcancelButtonTitle:@"取消" otherButtonTitles:@"删除", nil nil];  
+         [alert show];  </br>
+         }  </br>
+         }</br>
+    
+         
+         <font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

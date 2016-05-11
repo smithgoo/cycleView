@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     IOS原生态刷新控件实用——UIRefreshControl</br>
+  代码实例</br>
+     //
+     </br>
+     // ViewController.m</br>
+     
+     // 代码自定义cell</br>
+     
+     //</br>
+     
+     // Created by mac on 15/4/18.</br>
+     
+     // Copyright (c) 2015年 mac. All rights reserved.</br>
+     
+     //</br>
+     
+     
+     
+     #import "ViewController.h"</br>
+     
+     //#import "myTableViewCell.h"</br>
+     
+     @interface ViewController ()</br>
+     
+     
+     
+     @end</br>
+     
+     
+     
+     @implementation ViewController</br>
+     
+     
+     
+     - (void)viewDidLoad {</br>
+     
+     [super viewDidLoad];</br>
+     
+     
+     
+     [self addArrayM];</br>
+     
+     _myTableView = [[UITableView alloc]initWithFrame:[UIScreen mainScreen].bounds </br>style:UITableViewStylePlain];</br>
+     
+     _myTableView.delegate = self;</br>
+     
+     _myTableView.dataSource = self;</br>
+     
+     _myTableView.backgroundColor = [UIColor whiteColor];</br>
+     
+     [self.view addSubview:_myTableView];</br>
+     
+     [_myTableView reloadData];</br>
+     
+     
+     
+     /******内置刷新的常用属性设置******/</br>
+     
+     _refresh = [[UIRefreshControl alloc] init];</br>
+     
+     _refresh.tintColor = [UIColor redColor];</br>
+     
+     _refresh.attributedTitle =[[NSAttributedString alloc]initWithString:@"智课网正在加载"];</br>
+     
+     [_refresh addTarget:self action:@selector(pullToRefresh) </br>forControlEvents:UIControlEventValueChanged];</br>
+     
+     
+     
+     [_myTableView addSubview:_refresh];</br>
+     
+     
+     
+     // UIActivityViewController *act = [[UIActivityViewController alloc]initw];</br>
+     
+     // Do any additional setup after loading the view, typically from a nib.</br>
+     
+     }</br>
+     
+     -(void)pullToRefresh</br>
+     
+     {</br>
+     
+     [self.arrayM addObjectsFromArray:self.arrayM];</br>
+     
+     [_myTableView reloadData];</br>
+     
+     [NSTimer scheduledTimerWithTimeInterval:2.0 target:</br>self selector:@selector(timerStop) userInfo:nil repeats:NO];</br>
+     
+     }</br>
+     
+     -(void)timerStop</br>
+     
+     {</br>
+     
+     [_refresh endRefreshing];</br>
+     
+     
+     
+     }</br>
+     
+     -(void)addArrayM</br>
+     
+     {</br>
+     
+     NSString *one = @"A";</br>
+     
+     NSString *one1 = @"B";</br>
+     
+     NSString *one11 = @"C";</br>
+     
+     NSString *one111 = @"D";</br>
+     
+     NSString *one1111= @"E";</br>
+     
+     NSString *one11111= @"F";</br>
+     
+     NSString *one111111 = @"G";</br>
+     
+     _arrayM = [NSMutableArray arrayWithObjects:</br>one,one1,one11,one111,one1111,one11111,one111111, nil];</br>
+     
+     }</br>
+     
+     -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section</br>
+     
+     {</br>
+     
+     return [_arrayM count];</br>
+     
+     }</br>
+     
+     -(UITableViewCell *)tableView:(UITableView *)</br>tableView cellForRowAtIndexPath:(NSIndexPath </br>*)indexPath</br>
+     
+     {</br>
+     
+     static NSString *ID = @"cell";</br>
+     
+     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ID];</br>
+     
+     if (!cell) {</br>
+     
+     cell = [[UITableViewCell alloc]initWithStyle:</br>UITableViewCellStyleDefault reuseIdentifier:ID];</br>
+     
+     
+     
+     
+     
+     
+     
+     }</br>
+     
+     cell.imageView.image = [UIImage imageNamed:@"iosshare"];</br>
+     
+     cell.textLabel.text = [_arrayM objectAtIndex:indexPath.row];</br>
+     
+     return cell;</br>
+     
+     }</br>
+     
+     -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath</br>
+     
+     {</br>
+     
+     
+     
+     NSLog(@"点击我了");</br>
+     
+     }</br>
+     
+     -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath</br>
+     
+     {</br>
+     
+     
+     
+     
+     
+     return 80;</br>
+     
+     }</br>
+     
+     - (void)didReceiveMemoryWarning {</br>
+     
+     [super didReceiveMemoryWarning];</br>
+     
+     // Dispose of any resources that can be recreated.</br>
+     
+     }</br>
+     
+     
+     
+     @end</br>
+     
+     
+     GitHub链接：https://github.com/CoderMJLee/MJRefresh</br>
+     快速集成下拉刷新.</br>
+     
+     1.添加头部控件的方法</br>
+     [self.tableView addHeaderWithTarget:self action:@selector(headerRereshing)];</br>
+     或者</br>
+     [self.tableView addHeaderWithCallback:^{ }];</br>
+     2.添加尾部控件的方法</br>
+     [self.tableView addFooterWithTarget:self action:@selector(footerRereshing)];</br>
+     或者</br>
+     [self.tableView addFooterWithCallback:^{ }];</br>
+     3.可以在MJRefreshConst.h和MJRefreshConst.m文件中自定义显示的文字内容和文字颜色</br>
+     4.本框架兼容iOS6\iOS7，iPhone\iPad横竖屏</br>
+     5.自动进入刷新状态</br>
+     [self.tableView headerBeginRefreshing];</br>
+     [self.tableView footerBeginRefreshing];</br>
+     8.结束刷新</br>
+     [self.tableView headerEndRefreshing];</br>
+     [self.tableView footerEndRefreshing];</br>
+     
+     
+     
+     
+<td><font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

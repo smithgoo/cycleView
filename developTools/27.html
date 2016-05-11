@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     概述</br>
+     在多数移动应用中任何时候都只能有一个应用程序处于活跃状态，如果其他应用此刻发生了一些用户感兴趣的那么通过通知机制就可以告诉用户此时发生的事情。iOS中通知机制又叫消息机制，其包括两类：一类是本地通知；另一类是推送通知，也叫远程通知。两种通知在iOS中的表现一致，可以通过横幅或者弹出提醒两种形式告诉用户，并且点击通知可以会打开应用程序，但是实现原理却完全不同。今天就和大家一块去看一下如何在iOS中实现这两种机制，并且在文章后面会补充通知中心的内容避免初学者对两种概念的混淆。</br>
+     
+     本地通知</br>
+     推送通知</br>
+     补充--iOS开发证书、秘钥</br>
+     补充--通知中心</br>
+     目
+     
+     录</br>
+     本地通知</br>
+     本地通知是由本地应用触发的，它是基于时间行为的一种通知形式，例如闹钟定时、待办事项提醒，又或者一个应用在一段时候后不使用通常会提示用户使用此应用等都是本地通知。创建一个本地通知通常分为以下几个步骤：</br>
+     
+     创建UILocalNotification。</br>
+     设置处理通知的时间fireDate。</br>
+     配置通知的内容：通知主体、通知声音、图标数字等。</br>
+     配置通知传递的自定义数据参数userInfo（这一步可选）。</br>
+     调用通知，可以使用scheduleLocalNotification:按计划调度一个通知，也可以使用presentLocalNotificationNow立即调用通知。</br>
+     下面就以一个程序更新后用户长期没有使用的提醒为例对本地通知做一个简单的了解。在这个过程中并没有牵扯太多的界面操作，所有的逻辑都在AppDelegate中：进入应用后如果没有注册通知，需要首先注册通知请求用户允许通知；一旦调用完注册方法，无论用户是否选择允许通知此刻都会调用应用程序的- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings代理方法，在这个方法中根据用户的选择：如果是允许通知则会按照前面的步骤创建通知并在一定时间后执行。</br>
+     
+     AppDelegate.m</br>
+     
+     //</br>
+     //  AppDelegate.m</br>
+     //  LocalNotification</br>
+     //</br>
+     //  Created by Kenshin Cui on 14/03/28.</br>
+     //  Copyright (c) 2014年 Kenshin Cui. All rights reserved.</br>
+     //</br>
+     
+     #import "AppDelegate.h"</br>
+     #import "KCMainViewController.h"</br>
+     
+     @interface AppDelegate ()</br>
+     
+     @end</br>
+     
+     @implementation AppDelegate</br>
+     
+     #pragma mark - 应用代理方法</br>
+     - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {</br>
+     
+     _window=[[UIWindow alloc]initWithFrame:[UIScreen mainScreen].bounds];</br>
+     
+     _window.backgroundColor =[UIColor colorWithRed:249/255.0 green:249/255.0 blue:249/255.0 alpha:1];</br>
+     
+     //设置全局导航条风格和颜色</br>
+     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:23/255.0 green:180/255.0 blue:237/255.0 alpha:1]];</br>
+     [[UINavigationBar appearance] setBarStyle:UIBarStyleBlack];</br>
+     
+     KCMainViewController *mainController=[[KCMainViewController alloc]init];</br>
+     _window.rootViewController=mainController;</br>
+     
+     [_window makeKeyAndVisible];</br>
+     
+     //如果已经获得发送通知的授权则创建本地通知，否则请求授权(注意：如果不请求授权在设置中是没有对应的通知设置项的，也就是说如果从来没有发送过请求，即使通过设置也打不开消息允许设置)</br>
+     if ([[UIApplication sharedApplication]currentUserNotificationSettings].</br>types!=UIUserNotificationTypeNone) {</br>
+     [self addLocalNotification];</br>
+     }else{</br>
+     [[UIApplication sharedApplication]registerUserNotificationSettings:[UIUserNotificationSettings </br>settingsForTypes:UIUserNotificationTypeAlert|</br>UIUserNotificationTypeBadge|UIUserNotificationTypeSound  categories:nil]];</br>
+     }</br>
+     
+     return YES;</br>
+     }</br>
+     
+     #pragma mark 调用过用户注册通知方法之后执行（也就是调用完registerUserNotificationSettings:方法之后执行）</br>
+     -(void)application:(UIApplication *)application didRegisterUserNotificationSettings:</br>(UIUserNotificationSettings *)notificationSettings{</br>
+     if (notificationSettings.types!=UIUserNotificationTypeNone) {</br>
+     [self addLocalNotification];</br>
+     }</br>
+     }</br>
+     
+     #pragma mark 进入前台后设置消息信息</br>
+     -(void)applicationWillEnterForeground:(UIApplication *)application{</br>
+     [[UIApplication sharedApplication]setApplicationIconBadgeNumber:0];//进入前台取消应用消息图标</br>
+     }</br>
+     
+     #pragma mark - 私有方法</br>
+     #pragma mark 添加本地通知</br>
+     -(void)addLocalNotification{</br>
+     
+     //定义本地通知对象</br>
+     UILocalNotification *notification=[[UILocalNotification alloc]init];</br>
+     //设置调用时间</br>
+     notification.fireDate=[NSDate dateWithTimeIntervalSinceNow:10.0];//通知触发的时间，10s以后</br>
+     notification.repeatInterval=2;//通知重复次数</br>
+     //notification.repeatCalendar=[NSCalendar currentCalendar];//当前日历，使用前最好设置时区等信息以便能够自动同步时间</br>
+     
+     //设置通知属性</br>
+     notification.alertBody=@"最近添加了诸多有趣的特性，是否立即体验？"; //通知主体</br>
+     notification.applicationIconBadgeNumber=1;//应用程序图标右上角显示的消息数</br>
+     notification.alertAction=@"打开应用"; //待机界面的滑动动作提示</br>
+     notification.alertLaunchImage=@"Default";</br>//通过点击通知打开应用时的启动图片,这里使用程序启动图片</br>
+     //notification.soundName=</br>UILocalNotificationDefaultSoundName;//收到通知时播放的声音，默认消息声音</br>
+     notification.soundName=@"msg.caf";//通知声音（需要真机才能听到声音）</br>
+     
+     //设置用户信息</br>
+     notification.userInfo=@{@"id":@1,@"user":@"Kenshin Cui"};//绑定到通知上的其他附加信息</br>
+     
+     //调用通知</br>
+     [[UIApplication sharedApplication] scheduleLocalNotification:notification];</br>
+     }</br>
+     
+     #pragma mark 移除本地通知，在不需要此通知时记得移除</br>
+     -(void)removeNotification{</br>
+     [[UIApplication sharedApplication] cancelAllLocalNotifications];</br>
+     }</br>
+     @end</br>
+<td><font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

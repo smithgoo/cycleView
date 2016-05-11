@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>class类型 selecter选择器</title>
+ </head>
+ <body></br>
+     个人体会：obj-C中的“Class类型变量”比c#中的Object基类还要灵活，可以用它生成任何类型的实例（但是它 又不是NSObject）。而选择器SEL与函数指针IMP，如果非要跟c#扯上关系的话，这二个结合起来，就点类似c#中的反射+委托，可以根据一个方 法名称字符串，直接调用方法。
+     "牛"的基类 Cattle.h</br>
+     
+     #import</br>
+     
+     @interface Cattle : NSObject {</br>
+     int legsCount;</br>
+     }</br>
+     - (void)saySomething;</br>
+     - (void)setLegsCount:(int) count;</br>
+     @end</br>
+     Cattle.m</br>
+     
+     #import "Cattle.h"</br>
+     
+     @implementation Cattle</br>
+     
+     -(void) saySomething</br>
+     {</br>
+     NSLog(@"Hello, I am a cattle, I have %d legs.", legsCount);</br>
+     }</br>
+     
+     -(void) setLegsCount:(int) count</br>
+     {</br>
+     legsCount = count;</br>
+     }</br>
+     @end</br>
+     子类“公牛" Bull.h</br>
+     
+     #import</br>
+     #import "Cattle.h"</br>
+     
+     @interface Bull : Cattle {</br>
+     NSString *skinColor;</br>
+     }</br>
+     - (void)saySomething;</br>
+     - (NSString*) getSkinColor;</br>
+     - (void) setSkinColor:(NSString *) color;</br>
+     @end</br>
+     Bull.m</br>
+     
+     #import "Bull.h"</br>
+     
+     
+     @implementation Bull</br>
+     
+     -(void) saySomething</br>
+     {</br>
+     NSLog(@"Hello, I am a %@ bull, I have %d legs.", [self getSkinColor],legsCount);</br>
+     }</br>
+     
+     -(NSString*) getSkinColor</br>
+     {</br>
+     return skinColor;</br>
+     }</br>
+     
+     - (void) setSkinColor:(NSString *) color</br>
+     {</br>
+     skinColor = color;</br>
+     }</br>
+     @end</br>
+     代理类DoProxy.h (关键的代码都在这里)</br>
+
+     #import</br>
+     
+     //定义几个字符串常量</br>
+     #define SET_SKIN_COLOR @"setSkinColor:"</br>
+     #define BULL_CLASS @"Bull"</br>
+     #define CATTLE_CLASS @"Cattle"</br>
+     
+     
+     @interface DoProxy : NSObject {</br>
+     BOOL notFirstRun;</br>
+     
+     id cattle[3];</br>
+     //定义二个选择器</br>
+     SEL say;</br>
+     SEL skin;</br>
+     
+     //定义一个函数指针(传统C语言的处理方式)</br>
+     void(*setSkinColor_Func)(id,SEL,NSString*);</br>
+     
+     //定义一个IMP方式的函数指针(obj-C中推荐的方式)</br>
+     IMP say_Func;</br>
+     
+     //定义一个类</br>
+     Class bullClass;</br>
+     }</br>
+     
+     -(void) doWithCattleId:(id) aCattle colorParam:(NSString*) color;</br>
+     -(void) setAllIVars;</br>
+     -(void) SELFuncs;</br>
+     -(void) functionPointers;</br>
+     
+     @end</br>
+     DoProxy.m</br>
+     
+     #import "DoProxy.h"</br>
+     #import "Cattle.h"</br>
+     #import "Bull.h"</br>
+     
+     @implementation DoProxy</br>
+     
+     
+     //初始化所有变量</br>
+     - (void) setAllIVars</br>
+     {</br>
+     cattle[0] = [Cattle new];</br>
+     
+     bullClass = NSClassFromString(BULL_CLASS);</br>
+     //即cattle[1],cattle[2]都是Bull类的实例</br>
+     cattle[1] = [bullClass new];</br>
+     cattle[2] = [bullClass new];</br>
+     
+     say = @selector(saySomething);</br>
+     skin = NSSelectorFromString(SET_SKIN_COLOR);</br>
+     }</br>
+     
+     
+     //初始化id</br>
+     - (void) doWithCattleId:(id) aCattle colorParam:(NSString*) color</br>
+     {</br>
+     //第一次运行的时候</br>
+     if(notFirstRun == NO)</br>
+     {</br>
+     NSString *myName = NSStringFromSelector(_cmd);//取得当前正在执行的方法的名字</br>
+     NSLog(@"Running in the method of %@", myName);</br>
+     notFirstRun = YES;//修改初次运行标志位</br>
+     }</br>
+     
+     NSString *cattleParamClassName = [aCattle className];//取得aCattle的"类名称"</br>
+     
+     //如果aCattle是Bull或Cattle类的实例</br>
+     if([cattleParamClassName isEqualToString:BULL_CLASS] || [cattleParamClassName isEqualToString:CATTLE_CLASS])</br>
+     {</br>
+     [aCattle setLegsCount:4];//设置牛的4条腿</br>
+     if([aCattle respondsToSelector:skin])//如果aCattle对应的是类中,有定义方法"setSkinColor"</br>
+     {</br>
+     [aCattle performSelector:skin withObject:color];//则调用setSkinColor方法</br>
+     }</br>
+     else</br>
+     {</br>
+     NSLog(@"Hi, I am a %@, have not setSkinColor!", cattleParamClassName);//否则输出相应的提示信息</br>
+     }</br>
+     [aCattle performSelector:say];//最后执行saySomething方法(这二个方法在Bull与Cattle类中都有,所以肯定能运行)</br>
+     }</br>
+     else //如果aCattle即不是Bull类也不是Cattle类的实例</br>
+     {</br>
+     NSString *yourClassName = [aCattle className];</br>
+     NSLog(@"Hi, you are a %@, but I like cattle or bull!", yourClassName);//显示这个"异类"的相关信息</br>
+     }</br>
+     }</br>
+     
+     //初始化选择器以及相应函数</br>
+     - (void) SELFuncs</br>
+     {</br>
+     [self doWithCattleId:cattle[0] colorParam:@"brown"];</br>
+     [self doWithCattleId:cattle[1] colorParam:@"red"];</br>
+     [self doWithCattleId:cattle[2] colorParam:@"black"];</br>
+     [self doWithCattleId:self colorParam:@"haha"];//这里故意传入一个异类self(即DoProxy本身),DoProxy当然不是Bull或Cattle</br>
+     }</br>
+     
+     //函数指针测试</br>
+     - (void) functionPointers</br>
+     {</br>
+     //取得函数指针的第一种方式</br>
+     setSkinColor_Func=(void (*)(id, SEL, NSString*)) [cattle[1] methodForSelector:skin];</br>
+     //上面的语句其实等效于下面这种方法</br>
+     //IMP setSkinColor_Func = [cattle[1] methodForSelector:skin];</br>
+     
+     //用第二种方法取得saySomething的函数指针</br>
+     say_Func = [cattle[1] methodForSelector:say];</br>
+     
+     //用函数指针的形式调用setSkinColor</br>
+     setSkinColor_Func(cattle[1],skin,@"verbose");</br>
+     
+     NSLog(@"Running as a function pointer will be more efficiency!");</br>
+     
+     //调用saySomething方法</br>
+     say_Func(cattle[1],say);</br>
+     }</br>
+     
+     @end</br>
+     测试主函数main()</br>
+     
+     #import</br>
+     #import "DoProxy.h"</br>
+     
+     int main (int argc, const char * argv[]) {</br>
+     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];</br>
+     DoProxy *doProxy = [DoProxy new];</br>
+     
+     [doProxy setAllIVars];</br>
+     [doProxy SELFuncs];</br>
+     [doProxy functionPointers];</br>
+     
+     [doProxy release];</br>
+     [pool drain];</br>
+     return 0;</br>
+     }</br>
+     运行结果： 请手动代码</br>
+<td><font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

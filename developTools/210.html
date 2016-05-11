@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     ios 常用的公用方法。</br>
+     
+     
+     Objective-C</br>
+     
+     @interface CommonUtils : NSObject</br>
+     
+     + (NSString *)convertArrayToString:(NSArray *)array;</br>
+     + (NSArray *)convertStringToArray:(NSString *)string;</br>
+     + (BOOL)validateEmail:(NSString *)candidate;</br>
+     + (BOOL)validateCellPhone:(NSString *)candidate;</br>
+     
+     + (long)getDocumentSize:(NSString *)folderName;</br>
+     + (NSArray *)getLetters;</br>
+     + (NSArray *)getUpperLetters;</br>
+     + (NSString *)getIPAddress;</br>
+     + (NSString *)getFreeMemory;</br>
+     + (NSString *)getDiskUsed;</br>
+     + (NSString *)getStringValue:(id)value;</br>
+     
+     + (BOOL)createDirectorysAtPath:(NSString *)path;</br>
+     + (NSString*)getDirectoryPathByFilePath:(NSString *)filepath;</br>
+     @end</br>
+     #import "CommonUtils.h"</br>
+     #import <CommonCrypto/CommonDigest.h></br>
+         
+         @implementation CommonUtils</br>
+         //把数组转换为字符串。</br>
+         + (NSString *)convertArrayToString:(NSArray *)array{</br>
+         NSMutableString *string = [NSMutableString stringWithCapacity:0];</br>
+         for( NSInteger i=0;i<[array count];i++ ){</br>
+             [string appendFormat:@"%@%@",(NSString *)array[i], (i<([array count]-1))?@",":@""];</br>
+             }</br>
+             return string;</br>
+             }</br>
+             //吧字符串转换为数组。</br>
+             + (NSArray *)convertStringToArray:(NSString *)string{</br>
+             return [string componentsSeparatedByString:@","];</br>
+             }</br>
+             //匹配是否为email地址。</br>
+             + (BOOL)validateEmail:(NSString *)candidate{</br>
+             NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";</br>
+             NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];</br>
+             return [emailTest evaluateWithObject:candidate];</br>
+             }</br>
+             
+             + (BOOL)validateCellPhone:(NSString *)candidate{</br>
+             NSString *phoneRegex = @"((\\d{11})|^((\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})|(\\d{4}|\\d{3})-</br>(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1})|(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1}))</br>$)";</br>
+             NSPredicate *phoneTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", phoneRegex];</br>
+             return [phoneTest evaluateWithObject:candidate];</br>
+             }</br>
+             //获取文件的大小。</br>
+             + (long)getDocumentSize:(NSString *)folderName</br>
+             {</br>
+             NSFileManager *fileManager = [NSFileManager defaultManager];</br>
+             NSArray *paths = NSSearchPathForDirectoriesInDomains</br>(NSCachesDirectory, NSUserDomainMask, </br>YES);</br>
+             NSString *documentsDirectory = paths[0];</br>
+             documentsDirectory = [documentsDirectory stringByAppendingPathComponent:[NSString </br>stringWithFormat: @"/%@/", folderName]];</br>
+             //    NSDictionary *fileAttributes = [fileManager attributesOfFileSystemForPath:</br>documentsDirectory error:nil];</br>
+             NSDictionary *fileAttributes = [fileManager attributesOfItemAtPath:documentsDirectory error:</br>nil];</br>
+             
+             long size = 0;</br>
+             if(fileAttributes != nil)</br>
+             {</br>
+             NSNumber *fileSize = fileAttributes[NSFileSize];</br>
+             size = [fileSize longValue];</br>
+             }</br>
+             return size;</br>
+             }</br>
+             //得到小写字母。</br>
+             + (NSArray *)getLetters</br>
+             {</br>
+             return </br>@[@"a",@"b",@"c",@"d",@"e",@"f",@"g",@"h",@"i",</br>@"j",@"k",@"l",@"m",@"n",@"o",@"p",@"q</br>",@"r",@"s",@"t",@"u",@"v",@"w",@"x",@"y",@"z"];</br>
+             }</br>
+             //得到大写字母</br>
+             + (NSArray *)getUpperLetters</br>
+             {</br>
+             return </br>@[@"A",@"B",@"C",@"D",@"E",@"F",@"G",@"H",@"I",</br>@"J",@"K",@"L",@"M",@"N",@"O",@"P",@"Q",</br>@"R",@"S",@"T",@"U",@"V",@"W",@"X",@"Y",@"Z"];</br>
+             }</br>
+             //得到ip地址。</br>
+             + (NSString *)getIPAddress</br>
+             {</br>
+             NSString *address = @"Unknown";</br>
+             struct ifaddrs *interfaces = NULL;</br>
+             struct ifaddrs *temp_addr = NULL;</br>
+             int success = 0;</br>
+             
+             // retrieve the current interfaces - returns 0 on success</br>
+             success = getifaddrs(&interfaces);</br>
+             if (success == 0)</br>
+             {</br>
+             // Loop through linked list of interfaces</br>
+             temp_addr = interfaces;</br>
+             while(temp_addr != NULL)</br>
+             {</br>
+             if(temp_addr->ifa_addr->sa_family == AF_INET)</br>
+             {</br>
+             // Check if interface is en0 which is the wifi connection on the iPhone</br>
+             //                address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];</br>
+             //                NSLog(@"address: %@", [NSString stringWithUTF8String:temp_addr-</br>>ifa_name]);</br>
+             if([@(temp_addr->ifa_name) isEqualToString:@"en0"])</br>
+             {</br>
+             // Get NSString from C String</br>
+             address = @(inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr));</br>
+             }</br>
+             }</br>
+             
+             temp_addr = temp_addr->ifa_next;</br>
+             }</br>
+             }</br>
+             
+             // Free memory</br>
+             freeifaddrs(interfaces);</br>
+             
+             return address;</br>
+             
+             //    char iphone_ip[255];</br>
+             //    strcpy(iphone_ip,"127.0.0.1"); // if everything fails</br>
+             //    NSHost* myhost =[NSHost currentHost];</br>
+             //    if (myhost)</br>
+             //    {</br>
+             //        NSString *ad = [myhost address];</br>
+             //        if (ad)</br>
+             //            strcpy(iphone_ip,[ad cStringUsingEncoding: NSISOLatin1StringEncoding]);</br>
+             //    }</br>
+             //    return [NSString stringWithFormat:@"%s",iphone_ip];</br>
+             }</br>
+             //得到空闲的内存。</br>
+             + (NSString *)getFreeMemory{</br>
+             mach_port_t host_port;</br>
+             mach_msg_type_number_t host_size;</br>
+             vm_size_t pagesize;</br>
+             
+             host_port = mach_host_self();</br>
+             host_size = sizeof(vm_statistics_data_t) / sizeof(integer_t);</br>
+             host_page_size(host_port, &pagesize);</br>
+             
+             vm_statistics_data_t vm_stat;</br>
+             
+             if (host_statistics(host_port, HOST_VM_INFO, (host_info_t)&vm_stat, &host_size) != </br>KERN_SUCCESS)</br>
+             NSLog(@"Failed to fetch vm statistics");</br>
+             
+             /* Stats in bytes */</br>
+             natural_t mem_used = (vm_stat.active_count +</br>
+             vm_stat.inactive_count +</br>
+             vm_stat.wire_count) * pagesize;</br>
+             natural_t mem_free = vm_stat.free_count * pagesize;</br>
+             //  natural_t mem_total = mem_used + mem_free;</br>
+             return [NSString stringWithFormat:@"%0.1f MB used/%0.1f MB free", mem_used/1048576.f,</br> mem_free/1048576.f];</br>
+             //    NSLog(@"used: %u free: %u total: %u", mem_used, mem_free, mem_total);</br>
+             }</br>
+             //获取硬盘空闲的空间。</br>
+             + (NSString *)getDiskUsed</br>
+             {</br>
+             NSDictionary *fsAttr = [[NSFileManager defaultManager] </br>attributesOfFileSystemForPath:NSHomeDirectory() error:nil];</br>
+             float diskSize = [fsAttr[NSFileSystemSize] doubleValue] / 1073741824.f;</br>
+             float diskFreeSize = [fsAttr[NSFileSystemFreeSize] doubleValue] / 1073741824.f;</br>
+             float diskUsedSize = diskSize - diskFreeSize;</br>
+             return [NSString stringWithFormat:@"%0.1f GB of %0.1f GB", diskUsedSize, diskSize];</br>
+             }</br>
+             
+             + (NSString *)getStringValue:(id)value</br>
+             {</br>
+             if ([value isKindOfClass:[NSNull class]]) {</br>
+             return nil;</br>
+             }</br>
+             
+             if ([value isKindOfClass:[NSString class]]) {</br>
+             if ([@"" isEqualToString:value]) {</br>
+             return nil;</br>
+             }</br>
+             return value;</br>
+             }</br>
+             else</br>
+             {</br>
+             return [value stringValue];</br>
+             }</br>
+             }</br>
+             //创建某个路径是否成功。</br>
+             + (BOOL)createDirectorysAtPath:(NSString *)path{</br>
+             @synchronized(self){</br>
+             NSFileManager* manager = [NSFileManager defaultManager];</br>
+             if (![manager fileExistsAtPath:path]) {</br>
+             NSError *error = nil;</br>
+             if (![manager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil </br>error:&error]) {</br>
+             return NO;</br>
+             }</br>
+             }</br>
+             }</br>
+             return YES;</br>
+             }</br>
+             //获取文件路径。</br>
+             + (NSString*)getDirectoryPathByFilePath:(NSString *)filepath{</br>
+             
+             if(!filepath || [filepath length] == 0){</br>
+             return @"";</br>
+             }</br>
+             
+             int pathLength = [filepath length];</br>
+             int fileLength = [[filepath lastPathComponent] length];</br>
+             return [filepath substringToIndex:(pathLength - fileLength - 1)];</br>
+             }</br>
+             @end</br>
+
+<td><font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

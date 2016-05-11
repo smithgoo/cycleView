@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>继承</title>
+ </head>
+ <body></br>
+     作为面向对象的编程语言，object-c当然也支持继承，而且和java一样，支持的是单一继承，即只有一个超类。</br>
+     当然，也支持覆盖（或重写）父类的同名方法。例子如下：</br>
+     1. 代码：</br>
+     //1. MyRectangle.h</br>
+     #import <Foundation/NSObject.h></br>
+         @interface MyRectangle: NSObject {</br>
+         int width;</br>
+         int height;</br>
+         }</br>
+         
+         
+         -(MyRectangle*) initWithWidth: (int) w height: (int) h;</br>
+         -(void) setWidth: (int) w;</br>
+         -(void) setHeight: (int) h;</br>
+         -(void) setWidth: (int) w height: (int) h;</br>
+         -(int) width;</br>
+         -(int) height;</br>
+         -(void) print;</br>
+         @end</br>
+         
+         //2. MyRectangle.m</br>
+         
+         #import "MyRectangle.h"</br>
+         #import <stdio.h></br>
+             
+             @implementation MyRectangle</br>
+             -(MyRectangle*) initWithWidth: (int) w height: (int) h {</br>
+             self = [super init];</br>
+             
+             
+             if ( self ) {</br>
+             [self setWidth: w height: h];</br>
+             }</br>
+             
+             
+             return self;</br>
+             }</br>
+             
+             
+             -(void) setWidth: (int) w {</br>
+             width = w;</br>
+             }</br>
+             
+             
+             -(void) setHeight: (int) h {</br>
+             height = h;</br>
+             }</br>
+             
+             
+             -(void) setWidth: (int) w height: (int) h {</br>
+             width = w;</br>
+             height = h;</br>
+             }</br>
+             
+             
+             -(int) width {</br>
+             return width;</br>
+             }</br>
+             
+             
+             -(int) height {</br>
+             return  height;</br>
+             }</br>
+             
+             
+             -(void) print {</br>
+             printf( "width = %i, height = %i", width, height );</br>
+             }</br>
+             @end</br>
+             
+             
+             //3. Square.h</br>
+             #import "MyRectangle.h"</br>
+             
+             
+             @interface Square: MyRectangle</br>
+             -(Square*) initWithSize: (int) s;</br>
+             -(void) setSize: (int) s;</br>
+             -(int) size;</br>
+             @end</br>
+             
+             
+             
+             
+             //4. Square.m</br>
+             #import "Square.h"</br>
+             
+             
+             @implementation Square</br>
+             -(Square*) initWithSize: (int) s {</br>
+             self = [super init];</br>
+             
+             
+             if ( self ) {</br>
+             [self setSize: s];</br>
+             }</br>
+             
+             
+             return self;</br>
+             }</br>
+             
+             
+             -(void) setSize: (int) s {</br>
+             width = s;</br>
+             height = s;</br>
+             }</br>
+             
+             
+             -(int) size {</br>
+             return width;</br>
+             }</br>
+             
+             
+             -(void) setWidth: (int) w {</br>
+             [self setSize: w];</br>
+             }</br>
+             
+             
+             -(void) setHeight: (int) h {</br>
+             [self setSize: h];</br>
+             }</br>
+             @end</br>
+             
+             
+             
+             
+             //5. main.m</br>
+             #import "Square.h"</br>
+             #import "MyRectangle.h"</br>
+             #import <stdio.h></br>
+                 
+                 
+                 int main( int argc, const char *argv[] ) {</br>
+                 MyRectangle *rec = [[MyRectangle alloc] initWithWidth: 10 height: 20];</br>
+                 Square *sq = [[Square alloc] initWithSize: 15];</br>
+                 
+                 
+                 // print em</br>
+                 printf( "MyRectangle: " );</br>
+                 [rec print];</br>
+                 printf( "\n" );</br>
+                 
+                 
+                 printf( "Square: " );</br>
+                 [sq print];</br>
+                 printf( "\n" );</br>
+                 
+                 
+                 // update square</br>
+                 [sq setWidth: 20];</br>
+                 printf( "Square after change: " );</br>
+                 [sq print];</br>
+                 printf( "\n" );</br>
+                 
+                 
+                 //调用继承自父类的width和height</br>
+                 printf( "Square after width: %i\n", [sq width] );</br>
+                 printf( "Square after height: %i", [sq height] );</br>
+                 // free memory</br>
+                 [rec release];</br>
+                 [sq release];</br>
+                
+                 return 0;</br>
+                 }</br>
+                 
+                 2. 编译运行：</br>
+                 gcc -fconstant-string-class=NSConstantString -c main.m -I /GNUstep/System/Library/Headers</br>
+                 gcc -c MyRectangle.m -I /GNUstep/System/Library/Headers</br>
+                 gcc -c Square.m -I /GNUstep/System/Library/Headers</br>
+                 gcc main.o Square.o MyRectangle.o -o main -L /GNUstep/System/Library/Libraries/ -lobjc -lgnustep-base</br>
+                 
+                 $ ./main.exe</br>
+                 MyRectangle: width = 10, height = 20</br>
+                 Square: width = 15, height = 15</br>
+                 Square after change: width = 20, height = 20</br>
+                 Square after width: 20Square after height: 20</br>
+                 
+                 
+                 
+                 3. 说明：</br>
+                 （1） Square继承自MyRectangle,重写了setWidth和setHeight方法；</br>
+                 （2） Square可以调用继承自父类MyRectangle的width和height方法。</br>
+<td><font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

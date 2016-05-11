@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     协议分非正式协议和正式协议</br>
+     先说说非正式协议</br>
+     非正式协议在Obj-c中关键字虽然是interface,但是这个和C#中的借口并不完全相同。</br>
+     回忆之前学过的内容，我们定义一个类Sample时，会生成一个Sample.h,代码如下：</br>
+     #import <foundation foundation.h></br>
+         @interface Sample:NSObject {</br>
+         }</br>
+         -(void) HelloWorld;</br>
+         @end</br>
+         它表明Sample类中，约定了应该有一个名为HelloWorld的方法(注:这里说的时应该，而不是必须)</br>
+         它只是一种君子协议。</br>
+         如果我们在Sample.m中，并不遵守这个约定(即不实现这个方法)，编译器会给出警告。但是还时会编译成功</br>
+         xieyi1</br>
+         上图中的提示:Incomplete implementation of class “Sample”. 意为：Sample类并未完全实现interface中约定的方法。</br>
+         这就是obj-c中的协议跟c#中的接口不一样的地方：在c#中接口是强制必须实现的，否则编译这一关就过不了，而obj-c虽然在编译时会警告，但是最终能编译通过。</br>
+         
+         正式协议(protocal)</br>
+         其实就是非正式协议(interface)换了一种写法而已，看上去更正 规一些，语义上更强烈一些：要求采用该协议的类，”必须”实现协议中约定的方法。但是比较娱乐的是，即使是号称正式协议，编译器在编译时，遇到不守规矩的 情况，仍然只是给出警告。（当然正式协议也有它存在的意义，后面会提到）</br>
+         这里我们定义一个IQuery的协议</br>
+         IQuery.h</br>
+         
+         @protocol IQuery</br>
+         -(void) Query:(NSString*) sql;</br>
+         @end</br>
+         除了把关键字@interface换成了@protocal，其它的基本上没变化。下面定义一个类DBQuery，并采用这个正式协议</br>
+         DBQuery.h</br>
+         #import <Foundation/Foundation.h></br>
+             #import “IQuery.h”</br>
+             @interface DBQuery : NSObject<IQuery> {</br>
+                 }</br>
+                 @end</br>
+                 注意这里的DBQuery:NSObject<IQuery>，它表明DBQuery继承自NSObject，同时要实现接口IQuery。</br>
+                     DBQuery.m</br>
+                     #import “DBQuery.h”</br>
+                     @implementation DBQuery</br>
+                     -(void) Query:(NSString *)sql</br>
+                     {</br>
+                     NSLog(@”Query is called. sql:%@”,sql);</br>
+                     }</br>
+                     @end</br>
+                     当然，如果在DBQuery.m中不实现方法Query，也能编译通过，只是会收到一个警告。</br>
+                     也许到目前为止，你会觉得protocal跟interface比起来，都是类似的概念，protocal设计纯属多余。其实不然，protocal存在的一个重要意义在于：</br>
+                     正 式协议(protocal)可以将业务中的方法定义剥离出来，形成一个单独的文件，这跟传统OO中的提取接口是不谋而合的。如果遇到二个系统需要交换数 据，可以制定一套双方都遵守的protocal，然后这二个系统中都把这个协议文件添加到项目中，实现它即可。这一功能，非正式协议 (@interface)就做不到。(不信大家可以把NSObject<IQuery>中的IQuery改成其它类的interface 定义名称试试，编译根本通不过)</br>
+                         此外，obj-C 2.0中对正式协议还做了一些扩展，允许把正式协议中的方法标识为“必须实现(@requied)”和“可选实现(@optional)”二类，如果协议 中的方法被标识为@optional，即使采用该协议的类不实现这些方法，编译器也不会给出警告。这赋予了正式协议更多的灵活性。示例如下：</br>
+                         @protocol IQuery</br>
+                         @required</br>
+                         -(void) Query:(NSString*) sql;</br>
+                         @optional</br>
+                         -(void) HelloWorld;</br>
+                         @end</br>
+                         有了@optional关键字以后，其实“非正式协议”在语义上完全可以被“正式协议”所取代，事实上Cocoa中的非正式协议都在逐渐被标有@optional方法的正式协议所代替。</br>
+                         如果你在XCode的代码中，选中NSObject，右击–>Jump to Definition，会发现NSObject其实就是一个interface或protocal</br>
+                         xieyi2</br>
+                         选择protocal NSObject 继续，会看到NSObject.h文件中关于protocal NSObject的定义</br>
+                         xieyi3</br>
+                         同样的，你还可以看到interface NSObject的定义</br>
+                         xieyi4</br>
+                         从这里可以看到，非正式协议的interface NSObject其实最终采用的还是正式协议protocal NSObject.
+                         也就是说，在obj-c的OO世界中，身为万物之祖的NSObject其实也就一个”正式协议”，所以从NSObject派生出的所有类，都只是在遵守一个或多个协议而已。</br>
+                         
+                         另一个话题”泛型”</br>
+                         在obj-c中，一切皆为指针。前面的学习中，我们已经接触到了一种特殊的类型id，它可以认为是一种特殊的指针：可以指向任何类型的对象。id 再加上正式协议，能够达到形似c#中泛型的效果(注：只是形似，并非神似)</br>
+                         #import <Foundation/Foundation.h></br>
+                             #import “IQuery.h”</br>
+                             @interface DBQuery : NSObject<IQuery> {</br>
+                                 }</br>
+                                 -(void) test:(id<IQuery>) obj;</br>
+                                     @end</br>
+                                     注意这里的 -(void) test:(id<IQuery>) obj; 这表明test方法接受一个任意类型的对象做为参数，但是该参数对象必须实现接口IQuery(也可以说成该参数对象必须采用正式协议IQuery)，是不是跟c#中的</br>
+                                         void test(List<IQuery> obj) 长得很象？</br>
+                                             </br>
+                                             自己的理解：</br>
+                                             其实协议就相当于Java 中的interface 或者C++ 中的virtual class</br>
+                                             举个例子说说：</br>
+                                             首先我们声明一个协议</br>
+                                             @protocol MyProtocol</br>
+                                             - (void)myProtocolMethod;</br>
+                                             @end</br>
+                                             
+                                             @interface TestA</br>
+                                             {</br>
+                                             TestB<myProtocol>* pB;  // 说明类B应该支持<遵守>myProtocol这个协议</br>
+                                                 }</br>
+                                                 @interface TestB: NSObject<myProtocol>{</br>
+                                                     }</br>
+                                                     现在我们看如果我们在TestA里面昨晚了一件事情，然后要通知TestB。那就要通过myProtocol来实现，那通过pB我们就可以给myProtocol发通知，那TestB也就收到消息了</br>
+                                                     下面再附上一个用协议实现回调函数的例子，(网上转来的，但可以帮助我们理解)
+                                                     在编写android开发时，最常用的就是回调函数。自己编写回调函数，实现动态加载数据，加载完数据之后就利用回调函数通知给前台页面，显示相应数据的界面。在iphone中利用协议可以很容易的实现回调函数，后台加载数据，然后显示在前台页面。</br>
+                                                     实现一个显示文字为测试的视图，然后经过3秒钟测试文字变为回调函数文字。相应的截图如下：</br>
+                                                     
+                                                     实现的代码如下：</br>
+                                                     #import <UIKit/UIKit.h></br>
+                                                         @protocol NoteDelegate     //声明协议</br>
+                                                         //回调函数</br>
+                                                         -(void)messageCallBack:(NSString *)string;</br>
+                                                         @end</br>
+                                                         调用协议：</br>
+                                                         #import <Foundation/Foundation.h></br>
+                                                             #import “NoteDelegate.h”</br>
+                                                             @interface ManagerMessage : NSObject {</br>
+                                                             id<NoteDelegate> *noteDelegate;</br>
+                                                                 }</br>
+                                                                 @property (nonatomic,retain) id<NoteDelegate> *noteDelegate;    //@property预编译命令的作用是自动声明属性的 setter 和getter方法</br>
+                                                                     -(void)startThread;</br>
+                                                                     @end</br>
+                                                                     #import “ManagerMessage.h”</br>
+                                                                     @implementation ManagerMessage</br>
+                                                                     @synthesize noteDelegate;</br>
+                                                                     //开始一个线程</br>
+                                                                     -(void)startThread</br>
+                                                                     {</br>
+                                                                     //启动线程</br>
+                                                                     [NSTimer scheduledTimerWithTimeInterval:3
+                                                                     target:self
+                                                                     selector:@selector(targetMethod:)
+                                                                     userInfo:nil
+                                                                     repeats:NO];
+                                                                     }</br>
+                                                                     -(void)targetMethod:(NSString *)string</br>
+                                                                     {</br>
+                                                                     if (self.noteDelegate!=nil) {</br>
+                                                                     //完成线程 调用回调函数</br>
+                                                                     [self.noteDelegate messageCallBack:@"回调函数"];    //在这通过协议进行回调</br>
+                                                                     }</br>
+                                                                     }</br>
+                                                                     @end</br>
+                                                                     前台页面实现：</br>
+                                                                     #import “IphoneDeleteViewController.h”</br>
+                                                                     #import “ManagerMessage.h”</br>
+                                                                     @implementation IphoneDeleteViewController</br>
+                                                                     @synthesize textView;</br>
+                                                                     //回调函数</br>
+                                                                     -(void)messageCallBack:(NSString *)string</br>
+                                                                     {</br>
+                                                                     self.textView.text=string;    //前台收到回调信息 给了textView</br>
+                                                                     }</br>
+                                                                     - (void)viewDidLoad {</br>
+                                                                     [super viewDidLoad];</br>
+                                                                     self.textView.text=@”测试”;</br>
+                                                                     ManagerMessage *message=[[ManagerMessage alloc] init];</br>
+                                                                     //通知调用协议</br>
+                                                                     message.noteDelegate=self;</br>
+                                                                     [message startThread];</br>
+                                                                     [message release];</br>
+                                                                     }</br>
+                                                                     - (void)didReceiveMemoryWarning {</br>
+                                                                     [super didReceiveMemoryWarning];</br>
+                                                                     }
+                                                                     - (void)viewDidUnload {</br>
+                                                                     self.textView=nil;</br>
+                                                                     }</br>
+                                                                     - (void)dealloc {</br>
+                                                                     [self.textView release];</br>
+                                                                     [super dealloc];</br>
+                                                                     }</br>
+                                                                     @end</br>
+
+<td><font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>

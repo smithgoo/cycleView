@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>这是第一个ios程序 helloworld</title>
+ </head>
+ <body></br>
+     作为一种轻量级的数据交换格式，json正在逐步取代xml，成为网络数据的通用格式。</br>
+     
+     有的json代码格式比较混乱，可以使用此“http://www.bejson.com/”网站来进行JSON格式化校验（点击打开链接）。此网站不仅可以检测Json代码中的错误，而且可以以视图形式显示json中的数据内容，很是方便。</br>
+     
+     从IOS5开始，APPLE提供了对json的原生支持（NSJSONSerialization），但是为了兼容以前的ios版本，可以使用第三方库来解析Json。</br>
+     
+     本文将介绍TouchJson、 SBJson 、JSONKit 和 iOS5所支持的原生的json方法，解析国家气象局API，TouchJson和SBJson需要下载他们的库</br>
+     
+     TouchJson包下载： http://download.csdn.net/detail/enuola/4523169</br>
+     
+     SBJson 包下载： http://download.csdn.net/detail/enuola/4523177</br>
+     
+     JSONKit包下载：http://download.csdn.net/detail/enuola/4523160</br>
+     
+     下面的完整程序源码包下载：http://download.csdn.net/detail/enuola/4523223</br>
+     
+     PS：</br>
+     
+     国家气象局提供的天气预报接口</br>
+     
+     接口地址有三个：</br>
+     
+     http://www.weather.com.cn/data/sk/101010100.html</br>
+     
+     http://www.weather.com.cn/data/cityinfo/101010100.html</br>
+     
+     http://m.weather.com.cn/data/101010100.html</br>
+     
+     第三接口信息较为详细,提供的是6天的天气，关于API所返回的信息请见开源免费天气预报接口API以及全国所有地区代码！！（国家气象局提供），全国各城市对应这一个id号，根据改变id好我们就可以解析出来各个城市对应天气；</br>
+     
+     下面介绍四种方法解析JSON：</br>
+     
+     首先建立一个新的工程，（注意不要选择ARC机制）添加如下控件：</br>
+     
+     
+     如上图所示。下面展出程序代码：</br>
+     
+     文件 ViewController.h 中：</br>
+     
+     [cpp] view plaincopy</br>
+     #import <UIKit/UIKit.h></br>
+         
+         @interface ViewController : UIViewController</br>
+         
+         @property (retain, nonatomic) IBOutlet UITextView *txtView;</br>
+         
+         - (IBAction)btnPressTouchJson:(id)sender;</br>
+         - (IBAction)btnPressSBJson:(id)sender;</br>
+         - (IBAction)btnPressIOS5Json:(id)sender;</br>
+         - (IBAction)btnPressJsonKit:(id)sender;</br>
+         
+         @end</br>
+         文件ViewController.m中主要代码：</br>
+         （1）使用TouchJSon解析方法：（需导入包：#import "TouchJson/JSON/CJSONDeserializer.h"）</br>
+         [cpp] view plaincopy</br>
+         //使用TouchJson来解析北京的天气</br>
+         - (IBAction)btnPressTouchJson:(id)sender {</br>
+         //获取API接口</br>
+         NSURL *url = [NSURL URLWithString:@"http://m.weather.com.cn/data/101010100.html"];</br>
+         //定义一个NSError对象，用于捕获错误信息</br>
+         NSError *error;</br>
+         NSString *jsonString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];</br>
+         NSLog(@"jsonString--->%@",jsonString);</br>
+         //将解析得到的内容存放字典中，编码格式为UTF8，防止取值的时候发生乱码</br>
+         NSDictionary *rootDic = [[CJSONDeserializer deserializer] deserialize:[jsonString dataUsingEncoding:NSUTF8StringEncoding] error:&error];</br>
+         //因为返回的Json文件有两层，去第二层内容放到字典中去</br>
+         NSDictionary *weatherInfo = [rootDic objectForKey:@"weatherinfo"];</br>
+         NSLog(@"weatherInfo--->%@",weatherInfo);</br>
+         //取值打印</br>
+         txtView.text = [NSString stringWithFormat:@"今天是 %@  %@  %@  的天气状况是：%@  %@ ",[weatherInfo objectForKey:@"date_y"],[weatherInfo objectForKey:@"week"],[weatherInfo objectForKey:@"city"], [weatherInfo objectForKey:@"weather1"], [weatherInfo objectForKey:@"temp1"]];</br>
+         
+         }</br>
+         （2）使用SBJson解析方法：（需导入包：#import "SBJson/SBJson.h"）</br>
+         [cpp] view plaincopy</br>
+         //使用SBJson解析南阳的天气</br>
+         - (IBAction)btnPressSBJson:(id)sender {</br>
+         NSURL *url = [NSURL URLWithString:@"http://m.weather.com.cn/data/101180701.html"];</br>
+         NSError *error = nil;</br>
+         NSString *jsonString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:&error];</br>
+         SBJsonParser *parser = [[SBJsonParser alloc] init];</br>
+         
+         NSDictionary *rootDic = [parser objectWithString:jsonString error:&error];</br>
+         NSDictionary *weatherInfo = [rootDic objectForKey:@"weatherinfo"];</br>
+         txtView.text = [NSString stringWithFormat:@"今天是 %@  %@  %@  的天气状况是：%@  %@ ",[weatherInfo objectForKey:@"date_y"],[weatherInfo objectForKey:@"week"],[weatherInfo objectForKey:@"city"], [weatherInfo objectForKey:@"weather1"], [weatherInfo objectForKey:@"temp1"]];</br>
+         }</br>
+         （3）使用IOS5自带解析类NSJSONSerialization方法解析：（无需导入包，IOS5支持，低版本IOS不支持）</br>
+         [cpp] view plaincopy</br>
+         - (IBAction)btnPressIOS5Json:(id)sender {</br>
+         
+         NSError *error;</br>
+         //加载一个NSURL对象</br>
+         NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://m.weather.com.cn/data/101180601.html"]];</br>
+         //将请求的url数据放到NSData对象中</br>
+         NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+         //IOS5自带解析类NSJSONSerialization从response中解析出数据放到字典中</br>
+         NSDictionary *weatherDic = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingMutableLeaves error:&error];</br>
+         NSDictionary *weatherInfo = [weatherDic objectForKey:@"weatherinfo"];</br>
+         txtView.text = [NSString stringWithFormat:@"今天是 %@  %@  %@  的天气状况是：%@  %@ ",[weatherInfo objectForKey:@"date_y"],[weatherInfo objectForKey:@"week"],[weatherInfo objectForKey:@"city"], [weatherInfo objectForKey:@"weather1"], [weatherInfo objectForKey:@"temp1"]];</br>
+         NSLog(@"weatherInfo字典里面的内容为--》%@", weatherDic );</br>
+         }</br>
+         （4）使用JSONKit的解析方法：（需导入包：#import "JSONKit/JSONKit.h"）</br>
+         [cpp] view plaincopy</br>
+         - (IBAction)btnPressJsonKit:(id)sender {</br>
+         
+         //如果json是“单层”的，即value都是字符串、数字，可以使用objectFromJSONString</br>
+         NSString *json1 = @"{\"a\":123, \"b\":\"abc\"}";</br>
+         NSLog(@"json1:%@",json1);</br>
+         NSDictionary *data1 = [json1 objectFromJSONString];</br>
+         NSLog(@"json1.a:%@",[data1 objectForKey:@"a"]);</br>
+         NSLog(@"json1.b:%@",[data1 objectForKey:@"b"]);</br>
+         [json1 release];</br>
+         
+         //如果json有嵌套，即value里有array、object，如果再使用objectFromJSONString，程序可能会报错（测试结果表明：使用由网络或得到的php/json_encode生成的json时会报错，但使用NSString定义的json字符串时，解析成功），最好使用objectFromJSONStringWithParseOptions：</br>
+         NSString *json2 = @"{\"a\":123, \"b\":\"abc\", \"c\":[456, \"hello\"], \"d\":{\"name\":\"张三\", \"age\":\"32\"}}";</br>
+         NSLog(@"json2:%@", json2);</br>
+         NSDictionary *data2 = [json2 objectFromJSONStringWithParseOptions:JKParseOptionLooseUnicode];</br>
+         NSLog(@"json2.c:%@", [data2 objectForKey:@"c"]);</br>
+         NSLog(@"json2.d:%@", [data2 objectForKey:@"d"]);</br>
+         [json2 release];</br>
+         }</br>
+         
+         另外，由于iOS5新增了JSON解析的API，我们将其和其他五个开源的JSON解析库进行了解析速度的测试，下面是测试的结果。</br>
+         我们选择的测试对象包含下面的这几个框架，其中NSJSONSerialization是iOS5系统新增的JSON解析的API，需要iOS5的环境，如果您在更低的版本进行测试，应该屏蔽相应的代码调用。</br>
+         
+         - [SBJSON (json-framework)](http://code.google.com/p/json-framework/)</br>
+         
+         - [TouchJSON (from touchcode)](http://code.google.com/p/touchcode/)</br>
+         
+         - [YAJL (objective-C bindings)](http://github.com/gabriel/yajl-objc)</br>
+         
+         - [JSONKit](https://github.com/johnezang/JSONKit)</br>
+         
+         - [NextiveJson](https://github.com/nextive/NextiveJson) </br>
+         
+         -[NSJSONSerialization](http://developer.apple.com/library/ios/#documentation/Foundation/Reference/NSJSONSerialization_Class/Reference/Reference.html#//apple_ref/doc/uid/TP40010946)</br>
+         
+         我们选择了四个包含json格式的数据的文件进行测试。每一个文件进行100的解析动作，对解析的时间进行比较。</br>
+         
+         .....</br>
+         
+         测试的结果显示，系统的API的解析速度最快，我们在工程项目中选择使用，也是应用较为广泛的SBJSON的解析速度为倒数第二差，令我大跌眼镜。</br>
+         
+         与系统API较为接近的应该是JSONKit。</br>
+         
+         
+         
+         这里没有对API的开放接口和使用方式进行比较，若单纯基于以上解析速度的测试：</br>
+         
+         1：iOS5应该选择系统的API进行</br>
+         
+         2：不能使用系统API的应该选择JSONKit</br>
+         
+         <font color="#0000FF">是不是很简单，快来练练手吧</font></td>  </br></body>
+</html>
